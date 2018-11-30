@@ -28,7 +28,7 @@ void update();
 void draw();
 
 void setState(int state);
-
+int getState();
 
 bool getIsVideoLoaded();
 

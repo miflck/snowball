@@ -39,7 +39,6 @@ void VideoPlayer::update(){
             break;
             
         case IDLE:
-
             if(idleClip->isLoaded()){
                 idleClip->update();
                 if(idleClip->getIsMovieDone()){
@@ -55,7 +54,7 @@ void VideoPlayer::update(){
     
     
     if(introClip->getIsMovieDone()){
-        ofSendMessage("introe CLIP is done");
+        ofSendMessage("intro CLIP is done");
         introClip->setPosition(0);
         setState(IDLE);
     }
@@ -125,6 +124,9 @@ void VideoPlayer::setState(int _state){
     }
 }
 
+int VideoPlayer::getState(){
+    return state;
+}
 
 bool VideoPlayer::getIsVideoLoaded(){
     return bIsVideoLoaded;

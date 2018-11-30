@@ -26,6 +26,8 @@ class ofApp : public ofBaseApp{
         shared_ptr<VideoPlayer> video;
 
     void next();
+    void debugNext();
+
 private:
     int videoIndex=0;
 		

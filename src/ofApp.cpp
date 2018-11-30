@@ -73,18 +73,38 @@ void ofApp::draw(){
 
 
 void ofApp::next(){
-    videoIndex++;
-    video->stopAndReset();
-    if(videos.size()>0){
-        video=videos[videoIndex%videos.size()];
+    if(video->getState()==IDLE){
+        videoIndex++;
+        video->stopAndReset();
+        if(videos.size()>0){
+            video=videos[videoIndex%videos.size()];
+        }
+        video->setState(INTRO);
     }
-    video->setState(INTRO);
 }
+
+void ofApp::debugNext(){
+    if(video->getState()==INTRO){
+        video->setState(IDLE);
+    }else{
+        videoIndex++;
+        video->stopAndReset();
+        if(videos.size()>0){
+            video=videos[videoIndex%videos.size()];
+        }
+        video->setState(INTRO);
+    }
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if(key =='n'){
         next();
+    }
+    
+    if(key =='N'){
+        debugNext();
     }
 
 }
