@@ -68,6 +68,7 @@
 		F387370DB571155BC1282B7D /* b2CollideEdge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB5229C686C3BB08137BA36D /* b2CollideEdge.cpp */; };
 		FA08812321B01C21002B77D0 /* VideoPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08812121B01C21002B77D0 /* VideoPlayer.cpp */; };
 		FA08812621B01CF3002B77D0 /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08812421B01CF3002B77D0 /* Video.cpp */; };
+		FA08812F21B1E3CC002B77D0 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08812E21B1E3CB002B77D0 /* MovingObject.cpp */; };
 		FA7300BAC71DAC1ABAF6EE15 /* b2Fixture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 774DDD1B3F05D3FDF0D37794 /* b2Fixture.cpp */; };
 /* End PBXBuildFile section */
 
@@ -233,6 +234,8 @@
 		FA08812221B01C21002B77D0 /* VideoPlayer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VideoPlayer.hpp; sourceTree = "<group>"; };
 		FA08812421B01CF3002B77D0 /* Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Video.cpp; sourceTree = "<group>"; };
 		FA08812521B01CF3002B77D0 /* Video.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Video.hpp; sourceTree = "<group>"; };
+		FA08812D21B1E3CB002B77D0 /* MovingObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MovingObject.hpp; sourceTree = "<group>"; };
+		FA08812E21B1E3CB002B77D0 /* MovingObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MovingObject.cpp; sourceTree = "<group>"; };
 		FA784162B6A8E3A77BBE4D6C /* b2TimeStep.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = b2TimeStep.h; path = ../../../addons/ofxBox2d/libs/Box2D/Dynamics/b2TimeStep.h; sourceTree = SOURCE_ROOT; };
 		FD20B1FFE795860DB1C68BF2 /* b2ChainAndCircleContact.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = b2ChainAndCircleContact.cpp; path = ../../../addons/ofxBox2d/libs/Box2D/Dynamics/Contacts/b2ChainAndCircleContact.cpp; sourceTree = SOURCE_ROOT; };
 		FF2B018E24837032A4878576 /* ofxEasing.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasing.h; path = ../../../addons/ofxEasing/src/ofxEasing.h; sourceTree = SOURCE_ROOT; };
@@ -517,6 +520,8 @@
 				FA08812221B01C21002B77D0 /* VideoPlayer.hpp */,
 				FA08812421B01CF3002B77D0 /* Video.cpp */,
 				FA08812521B01CF3002B77D0 /* Video.hpp */,
+				FA08812E21B1E3CB002B77D0 /* MovingObject.cpp */,
+				FA08812D21B1E3CB002B77D0 /* MovingObject.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -692,6 +697,7 @@
 				7E1AAAB7A2F92465251AE49E /* b2PolygonAndCircleContact.cpp in Sources */,
 				41DDB078572B368F685E19F8 /* b2PolygonContact.cpp in Sources */,
 				14F3FB468FED85DD86CC9BCF /* b2DistanceJoint.cpp in Sources */,
+				FA08812F21B1E3CC002B77D0 /* MovingObject.cpp in Sources */,
 				03AC305C546FEDB7C2A7E1A8 /* b2FrictionJoint.cpp in Sources */,
 				2A5D09413FD64EB3AF88EF02 /* b2GearJoint.cpp in Sources */,
 				14D76FD1B7F190398D120FA4 /* b2Joint.cpp in Sources */,

@@ -2,6 +2,10 @@
 
 #include "ofMain.h"
 #include "VideoPlayer.hpp"
+
+#include "MovingObject.hpp"
+
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -24,6 +28,10 @@ class ofApp : public ofBaseApp{
     
         vector<shared_ptr<VideoPlayer> > videos;
         shared_ptr<VideoPlayer> video;
+    
+    vector <MovingObject> particles;
+    
+    MovingObject o;
 
     void next();
     void debugNext();

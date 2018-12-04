@@ -53,6 +53,33 @@ void ofApp::setup(){
     }
     video->setState(INTRO);
    // video->start();
+    
+    
+    for(int i=0;i<1000;i++){
+        MovingObject o;
+        o.setup();
+        o.setPosition(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+        o.setMaxSpeed(ofRandom(20,40));
+        o.bSeekTarget=false;
+        o.setSeekForce(0);
+        //o.setSpeed(1,1);
+        //o.setWanderForce(1);
+        o.setGravity(true);
+        o.setGravityForce(ofVec2f(0,00.01));
+        particles.push_back(o);
+    }
+
+    o.setup();
+    o.setPosition(ofGetWidth()/2, ofGetHeight()/2);
+    o.setMaxSpeed(20);
+    o.bSeekTarget=false;
+    o.setSeekForce(0);
+    //o.setSpeed(1,1);
+    //o.setWanderForce(1);
+    o.setGravity(true);
+    o.setGravityForce(ofVec2f(0,00.05));
+    //o.setTarget(ofVec2f(ofGetWidth(),ofGetHeight()));
+
 }
 
 //--------------------------------------------------------------
@@ -62,11 +89,25 @@ void ofApp::update(){
     }*/
     video->update();
 
+    
+    for(int i=0;i<particles.size();i++){
+        particles[i].update();
+    }
+    o.update();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofPushMatrix();
+    ofScale(0.5,0.5);
     video->draw();
+    ofPopMatrix();
+    
+    for(int i=0;i<particles.size();i++){
+        particles[i].draw();
+    }
+    o.draw();
 }
 
 
@@ -107,6 +148,17 @@ void ofApp::keyPressed(int key){
         debugNext();
     }
 
+    
+    if(key=='f'){
+        
+        
+        for(int i=0;i<particles.size();i++){
+            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(20,50));
+        }
+        
+        o.addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0,-1)*10), 50);
+    }
+    
 }
 
 //--------------------------------------------------------------
