@@ -107,3 +107,6 @@ Carthage/Build.rbenv-vars
 # rbenv
 .rbenv-vars
 /bin/appswitcherDebug.app/Contents/MacOS/appswitcherDebug
+/snowball.xcodeproj/xcshareddata/xcschemes/snowball Release.xcscheme
+/bin/snowball.app
+/bin/snowballDebug.app/Contents/MacOS/snowballDebug

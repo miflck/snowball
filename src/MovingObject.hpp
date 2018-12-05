@@ -130,6 +130,13 @@ public:
 private:
     
     float damping=0.9999;
+    float dampingInit=0.9999;
+
+    float dampingTarget=0.99;
+    float dampDuration=10;
+    float dampingInitTime;
+
+    
     float bounceDamping=0.01;
     float topDamping=0.5;
     bool bHasReached=true;

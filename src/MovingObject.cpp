@@ -42,6 +42,9 @@ void MovingObject::update(){
     ofVec2f distance=target-position;
     if(distance.length()<1 && velocity.length()< 0.1)bHasReached=true;
   //  cout<<distance.length()<<" vel "<<velocity.length()<<" reached "<<bHasReached<<endl;
+    
+    auto damptingEndTime = dampingInitTime + dampDuration;
+    damping = ofxeasing::map_clamp(now, dampingInitTime, damptingEndTime, dampingInit, dampingTarget, &ofxeasing::linear::easeNone);
     }
 
 
@@ -408,7 +411,7 @@ void MovingObject::bounceFromTop(){
     }
 }
 
-void MovingObject::bounceFromSides(){
+/*void MovingObject::bounceFromSides(){
     if(getPosition().x-(actualRadius/2)<0){
         velocity.x=-velocity.x;
         setPosition((actualRadius/2), getPosition().y);
@@ -419,12 +422,25 @@ void MovingObject::bounceFromSides(){
         setPosition(ofGetWidth()-(actualRadius/2), getPosition().y);
     }
     
-}
+}*/
 
+void MovingObject::bounceFromSides(){
+    if(getPosition().x-(actualRadius/2)<0){
+     
+        setPosition(ofGetWidth()-(actualRadius/2), getPosition().y);
+    }
+    
+    if(getPosition().x+(actualRadius/2)>ofGetWidth()){
+        velocity.x=-velocity.x;
+        setPosition(actualRadius/2, getPosition().y);
+    }
+    
+}
 
 void MovingObject::addForce(ofVec2f fv, float f){
     externalForceVector=fv;
     externalforce=f;
+    dampingInitTime=ofGetElapsedTimef();
 }
 
 

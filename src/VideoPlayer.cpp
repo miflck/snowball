@@ -41,9 +41,7 @@ void VideoPlayer::update(){
         case IDLE:
             if(idleClip->isLoaded()){
                 idleClip->update();
-                if(idleClip->getIsMovieDone()){
-                    ofSendMessage("idle CLIP is done");
-                }
+              
             }
             
             break;
@@ -54,9 +52,14 @@ void VideoPlayer::update(){
     
     
     if(introClip->getIsMovieDone()){
-        ofSendMessage("intro CLIP is done");
-        introClip->setPosition(0);
+       // ofSendMessage("intro CLIP is done");
+       // introClip->setPosition(0);
+        cout<<"intro is done"<<endl;
         setState(IDLE);
+    }
+    
+    if(idleClip->getIsMovieDone()){
+        // ofSendMessage("idle CLIP is done");
     }
     
 
@@ -104,17 +107,22 @@ void VideoPlayer::setIdleClip(string p){
 
 void VideoPlayer::setState(int _state){
     state=_state;
+    cout<<"switch "<<state<<endl;
     switch (state) {
         case INTRO:
             if(introClip->isLoaded()){
-                stopAndResetIdle();
+               // stopAndResetIdle();
+                idleClip->setPaused(true);
+               introClip->firstFrame();
                 introClip->play();
             }
             break;
             
         case IDLE:
             if(idleClip->isLoaded()){
-                stopAndResetIntro();
+               // stopAndResetIntro();
+                introClip->setPaused(true);
+               // idleClip->firstFrame();
                 idleClip->play();
             }
             break;

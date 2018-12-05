@@ -59,13 +59,13 @@ void ofApp::setup(){
         MovingObject o;
         o.setup();
         o.setPosition(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
-        o.setMaxSpeed(ofRandom(20,40));
+        o.setMaxSpeed(ofRandom(10,20));
         o.bSeekTarget=false;
         o.setSeekForce(0);
         //o.setSpeed(1,1);
         //o.setWanderForce(1);
         o.setGravity(true);
-        o.setGravityForce(ofVec2f(0,00.01));
+        o.setGravityForce(ofVec2f(0,00.02));
         particles.push_back(o);
     }
 
@@ -84,11 +84,12 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    /*for(int i=0;i<videos.size();i++){
+   /* for(int i=0;i<videos.size();i++){
         videos[i]->update();
     }*/
-    video->update();
+   // video->update();
 
+    videos[videoIndex%videos.size()]->update();
     
     for(int i=0;i<particles.size();i++){
         particles[i].update();
@@ -100,8 +101,9 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofPushMatrix();
-    ofScale(0.5,0.5);
-    video->draw();
+   // ofScale(0.5,0.5);
+
+      videos[videoIndex%videos.size()]->draw();
     ofPopMatrix();
     
     for(int i=0;i<particles.size();i++){
@@ -114,14 +116,16 @@ void ofApp::draw(){
 
 
 void ofApp::next(){
-    if(video->getState()==IDLE){
+   // if(video->getState()==IDLE){
+     //   videos[videoIndex%videos.size()]->stopAndReset();
+        
         videoIndex++;
-        video->stopAndReset();
-        if(videos.size()>0){
-            video=videos[videoIndex%videos.size()];
-        }
-        video->setState(INTRO);
-    }
+
+      //  if(videos.size()>0){
+       //     video=videos[videoIndex%videos.size()];
+       // }
+        videos[videoIndex%videos.size()]->setState(INTRO);
+  //  }
 }
 
 void ofApp::debugNext(){
