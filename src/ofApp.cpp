@@ -146,8 +146,11 @@ void ofApp::draw(){
 
 void ofApp::next(){
    // if(video->getState()==IDLE){
-     //   videos[videoIndex%videos.size()]->stopAndReset();
-        
+        videos[videoIndex%videos.size()]->stopAndReset();
+    
+    
+    
+    
         videoIndex++;
 
        /*if(videos.size()>0){

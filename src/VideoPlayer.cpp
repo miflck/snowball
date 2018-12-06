@@ -13,8 +13,12 @@ VideoPlayer::VideoPlayer(){
     introClip=a;
     shared_ptr<Video> b(new Video);
     idleClip=b;
+    
+    shared_ptr<Video> c(new Video);
+    video=a;
 
     bShowVideo=true;
+    rewind=false;
 }
 //--------------------------------------------------------------
 
@@ -32,11 +36,11 @@ void VideoPlayer::setup(){
 void VideoPlayer::update(){
     //bool isLoaded=true;
     
-    //introClip->update();
-    //idleClip->update();
+    introClip->update();
+    idleClip->update();
 
     
-    switch (state) {
+   /* switch (state) {
         case INTRO:
             if(introClip->isLoaded()){
             introClip->update();
@@ -53,10 +57,12 @@ void VideoPlayer::update(){
  
         default:
             break;
-    }
+    }*/
     
     
-    if(introClip->getIsMovieDone() && introClip->isPlaying()){
+   // if(introClip->getIsMovieDone() && introClip->isPlaying()){
+        if(introClip->getIsMovieDone()){
+
        // ofSendMessage("intro CLIP is done");
        // introClip->setPosition(0);
         cout<<"intro is done"<<endl;
@@ -66,9 +72,7 @@ void VideoPlayer::update(){
   /*  if(idleClip->getIsMovieDone()){
         // ofSendMessage("idle CLIP is done");
     }*/
-    
-
-    
+  
     
 }
 //--------------------------------------------------------------
@@ -101,7 +105,6 @@ void VideoPlayer::setIntroClip(string p){
     introClip->load(p);
     cout<<"loading intro"<<p<<endl;
     introClip->setLoopState(OF_LOOP_NONE);
-    
 }
 
 void VideoPlayer::setIdleClip(string p){
@@ -116,22 +119,36 @@ void VideoPlayer::setState(int _state){
     switch (state) {
         case INTRO:
             if(introClip->isLoaded()){
-                idleClip->setPaused(true);
+               // idleClip->setPaused(true);
               // introClip->firstFrame();
-               // introClip->setFrame(0);
-                introClip->setPaused(false);
+                //introClip->setFrame(0);
+             
+               /* if(!isThreadRunning()){
+                    startThread(idleClip);
+                }*/
+                
+                stopAndResetIdle();
+               // idleClip->setFrame(0);
+                introClip->play();
             }
             break;
             
         case IDLE:
             if(idleClip->isLoaded()){
-                introClip->setPaused(true);
+                stopAndResetIntro();
+             //  introClip->setPaused(true);
              //  idleClip->firstFrame();
              //   idleClip->stop();
 
-               // idleClip->setFrame(0);
+//                idleClip->setFrame(0);
 
-                idleClip->setPaused(false);
+               /* if(!isThreadRunning()){
+                    startThread(introClip);
+                }*/
+               // introClip->setFrame(0);
+                
+                
+                idleClip->play();
             }
             break;
             
@@ -158,22 +175,35 @@ void VideoPlayer::stop(){
 }
 
 void VideoPlayer::stopAndResetIntro(){
-    introClip->stop();
-    introClip->setPosition(0);
+//    introClip->stop();
+//    introClip->setPosition(0);
+    
+    video=introClip;
+    startThread();
+    
 }
 void VideoPlayer::stopAndResetIdle(){
-    idleClip->stop();
+   /* idleClip->stop();
     idleClip->setPosition(0);
+    */
+    video=idleClip;
+    startThread();
 }
 
 void VideoPlayer::stopAndReset(){
     setState(INIT);
     stopAndResetIntro();
-    stopAndResetIdle();
+   // stopAndResetIdle();
 }
 
 
 void VideoPlayer::showVideo(bool _showVideo){
     bShowVideo=_showVideo;
     cout<<"show video "<<_showVideo<<bShowVideo<<endl;
+}
+
+
+void VideoPlayer::threadedFunction(){
+    video->setPaused(true);
+    video->setFrame(0);
 }

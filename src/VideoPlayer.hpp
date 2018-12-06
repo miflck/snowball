@@ -17,7 +17,7 @@
 #define INTRO 100
 #define IDLE 200
 
-class VideoPlayer: public ofBaseApp{
+class VideoPlayer: public ofBaseApp, ofThread{
 
 public:
 VideoPlayer();
@@ -47,6 +47,8 @@ void showVideo(bool _showVideo);
     void stopAndResetIntro();
 
     ofImage *img;
+    
+    void threadedFunction();
 
 private:
     //shared_ptr<Video> movieclip;
@@ -55,9 +57,10 @@ private:
     
     shared_ptr<Video> introClip;
     shared_ptr<Video> idleClip;
+    shared_ptr<Video> video;
 
 
-
+    bool rewind;
     
     int state;
     
