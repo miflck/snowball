@@ -22,6 +22,7 @@ MovingObject:: ~ MovingObject(){
 void MovingObject::setup(){
     scaleDuration=1.f;
     actualRadius=0;
+    initRadius=0;
     easingInitTime = ofGetElapsedTimef();
     radiusTarget=10;    
      wanderR=30.f;
@@ -35,7 +36,7 @@ void MovingObject::update(){
     auto endTime = easingInitTime + scaleDuration;
     auto now = ofGetElapsedTimef();
     move();
-    actualRadius = ofxeasing::map_clamp(now, easingInitTime, endTime, actualRadius, radiusTarget, &ofxeasing::linear::easeIn);
+    actualRadius = ofxeasing::map_clamp(now, easingInitTime, endTime, initRadius, radiusTarget, &ofxeasing::linear::easeIn);
     velocityBefore=velocity;
     
     // check if reached
@@ -45,7 +46,11 @@ void MovingObject::update(){
     
     auto damptingEndTime = dampingInitTime + dampDuration;
     damping = ofxeasing::map_clamp(now, dampingInitTime, damptingEndTime, dampingInit, dampingTarget, &ofxeasing::linear::easeNone);
-    }
+    
+    auto fadeEndTime = fadeInitTime + fadeDuration;
+    actualFade = ofxeasing::map_clamp(now, fadeInitTime, fadeEndTime, fadeInit, fadeTarget, &ofxeasing::linear::easeNone);
+
+}
 
 
 
@@ -138,8 +143,16 @@ void MovingObject::draw(){
     
     ofPushMatrix();
     ofPushStyle();
-    //ofSetColor(255);
-    ofDrawEllipse(position.x, position.y, actualRadius, actualRadius);
+  
+    ofSetColor(255,actualFade);
+    fadeInImage->draw(position.x-fadeInImage->getWidth()/2,position.y-fadeInImage->getHeight()/2);
+    
+    ofSetColor(255,255-actualFade);
+    fadeOutImage->draw(position.x-fadeOutImage->getWidth()/2,position.y-fadeOutImage->getHeight()/2);
+    
+   // ofSetColor(255,actualFade);
+   // ofDrawEllipse(position.x, position.y, actualRadius, actualRadius);
+    
     ofPopStyle();
     ofPopMatrix();
     
@@ -159,6 +172,7 @@ void MovingObject::setPosition(ofVec2f _p){
 
 void MovingObject::setRadius(int _radius){
     radiusTarget=_radius;
+
 }
 
 int MovingObject::getRadius(){
@@ -403,13 +417,24 @@ void MovingObject::bounceFromGround(){
         setPosition(getPosition().x, ofGetHeight()-(actualRadius/2));
     }
 }
-
+/*
 void MovingObject::bounceFromTop(){
     if(getPosition().y-(actualRadius/2)<0){
         velocity.y=-velocity.y*topDamping;
         setPosition(getPosition().x, (actualRadius/2));
     }
 }
+
+*/
+
+void MovingObject::bounceFromTop(){
+    if(getPosition().y<boundingBox.y){
+        velocity.y=-velocity.y*topDamping;
+        setPosition(getPosition().x, boundingBox.y);
+    }
+}
+
+
 
 /*void MovingObject::bounceFromSides(){
     if(getPosition().x-(actualRadius/2)<0){
@@ -423,7 +448,7 @@ void MovingObject::bounceFromTop(){
     }
     
 }*/
-
+/*
 void MovingObject::bounceFromSides(){
     if(getPosition().x-(actualRadius/2)<0){
      
@@ -436,6 +461,40 @@ void MovingObject::bounceFromSides(){
     }
     
 }
+*/
+/*
+void MovingObject::bounceFromSides(){
+   // if(getPosition().x-(actualRadius/2)<boundingBox.x){
+        if(getPosition().x-(actualRadius/2)<boundingBox.x){
+
+        setPosition((boundingBox.x+boundingBox.width)-(actualRadius/2), getPosition().y);
+
+        //setPosition((boundingBox.x+boundingBox.width)-(actualRadius/2), getPosition().y);
+    }
+    
+    if(getPosition().x+(actualRadius/2)>boundingBox.x+boundingBox.width){
+        velocity.x=-velocity.x;
+        setPosition(boundingBox.x+actualRadius/2, getPosition().y);
+    }
+    
+}*/
+
+// overshoot
+void MovingObject::bounceFromSides(){
+    if(getPosition().x<boundingBox.x){
+        
+        setPosition((boundingBox.x+boundingBox.width), getPosition().y);
+        
+        //setPosition((boundingBox.x+boundingBox.width)-(actualRadius/2), getPosition().y);
+    }
+    
+    if(getPosition().x>boundingBox.x+boundingBox.width){
+        velocity.x=-velocity.x;
+        setPosition(boundingBox.x, getPosition().y);
+    }
+    
+}
+
 
 void MovingObject::addForce(ofVec2f fv, float f){
     externalForceVector=fv;
@@ -446,6 +505,40 @@ void MovingObject::addForce(ofVec2f fv, float f){
 
 void MovingObject::addForce(ofVec2f fv){
     externalForceVector=fv;
+}
+
+void MovingObject::setBoundingBox(ofRectangle b){
+    boundingBox=b;
+}
+
+void MovingObject::setImage(ofImage *_img){
+    image=_img;
+    initRadius=actualRadius;
+    
+    scaleTo(ofRandom(10,30),1);
+    fadeInitTime=ofGetElapsedTimef();
+    fadeInit=0;
+    fadeTarget=255;
+    fadeInImage=image;
+
+}
+
+void MovingObject::setNewImage(ofImage *_img,float _duration){
+    newimage=_img;
+
+    fadeInitTime=ofGetElapsedTimef();
+    fadeInit=0;
+    fadeDuration=_duration;
+    fadeTarget=255;
+    
+    fadeOutImage=fadeInImage;
+    fadeInImage=newimage;
+    
+    initRadius=actualRadius;
+    scaleTo(newimage->getWidth(),fadeDuration);
+
+    
+    //fadeOutImage=image;
 }
 
 

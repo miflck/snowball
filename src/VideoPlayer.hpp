@@ -46,7 +46,7 @@ void showVideo(bool _showVideo);
     void stopAndResetIdle();
     void stopAndResetIntro();
 
-    
+    ofImage *img;
 
 private:
     //shared_ptr<Video> movieclip;

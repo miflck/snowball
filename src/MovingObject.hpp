@@ -16,6 +16,7 @@ class MovingObject {
     
 public:
     
+    
     int screenWidth=1920;
     int screenHeight=1080;
     
@@ -75,6 +76,8 @@ public:
     float easingInitTime;
     float radiusTarget;
     float actualRadius;
+    float initRadius;
+
     float scaleDuration;
     
     
@@ -126,8 +129,24 @@ public:
     void bounceFromGround();
     void bounceFromTop();
     void bounceFromSides();
+    
+    void setBoundingBox(ofRectangle b);
+    
+    void setImage(ofImage *_img);
+    void setNewImage(ofImage *_img, float _duration);
+
+    
+    
 
 private:
+    
+    
+    ofImage *image;
+    ofImage *newimage;
+    
+    ofImage *fadeInImage;
+    ofImage *fadeOutImage;
+
     
     float damping=0.9999;
     float dampingInit=0.9999;
@@ -136,6 +155,13 @@ private:
     float dampDuration=10;
     float dampingInitTime;
 
+    
+    float fadeInit=0;
+    float fadeTarget=255;
+    float actualFade=0;
+    float fadeDuration=5;
+    float fadeInitTime;
+    
     
     float bounceDamping=0.01;
     float topDamping=0.5;
@@ -162,6 +188,8 @@ private:
     
     ofVec2f externalForceVector;
     float externalforce;
+    
+    ofRectangle boundingBox;
     
     
 };

@@ -4,6 +4,7 @@
 #include "VideoPlayer.hpp"
 
 #include "MovingObject.hpp"
+#include "ofxJsonSettings.h"
 
 
 class ofApp : public ofBaseApp{
@@ -27,7 +28,7 @@ class ofApp : public ofBaseApp{
     
     
         vector<shared_ptr<VideoPlayer> > videos;
-        shared_ptr<VideoPlayer> video;
+      //  shared_ptr<VideoPlayer> video;
     
     vector <MovingObject> particles;
     
@@ -38,5 +39,13 @@ class ofApp : public ofBaseApp{
 
 private:
     int videoIndex=0;
+    
+    ofImage mask;
+    
+    vector <ofImage > images;
+
+    ofVec2f *boundingBoxPosition;
+    ofVec2f *boundingBoxDimension;
+
 		
 };
