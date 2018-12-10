@@ -6,6 +6,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    ofSetVerticalSync(true);
     Settings::get().load("data.json");
 
 
