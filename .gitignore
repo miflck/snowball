@@ -110,3 +110,10 @@ Carthage/Build.rbenv-vars
 /snowball.xcodeproj/xcshareddata/xcschemes/snowball Release.xcscheme
 /bin/snowball.app
 /bin/snowballDebug.app/Contents/MacOS/snowballDebug
+/bin/data/01_1_1_1.mov
+/bin/data/01_1_1_1.mp4
+/bin/data/01_1_1.mov
+/bin/data/01_2_1_2.mov
+/bin/data/01_2_1_2.mp4
+/bin/data/movie_01
+/bin/data/movie_02
