@@ -5,7 +5,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+    ofBackground(0);
     ofSetVerticalSync(true);
     Settings::get().load("data.json");
     mask.load("mask.png");
@@ -79,7 +79,7 @@ void ofApp::setup(){
         o.setNewImage(&images[0],ofRandom(2));
 
         o.setup();
-        o.setPosition(ofGetWidth()/2, ofGetHeight()/2);
+        o.setPosition(1920/2, ofGetHeight()/2);
         o.setMaxSpeed(ofRandom(10,20));
         o.bSeekTarget=false;
         o.setSeekForce(0);
@@ -134,27 +134,34 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofPushMatrix();
+    ofPushStyle();
+    ofTranslate(1920, 0);
    // ofScale(0.5,0.5);
      videos[videoIndex%videos.size()]->draw();
+    ofSetColor(255,0,0);
+
+    ofDrawLine(0, 0, 0, 1080);
+
   //  video->draw();
+    ofPopStyle();
     ofPopMatrix();
     
     //ofEnableBlendMode(OF_BLENDMODE_SCREEN);
    // ofEnableAlphaBlending();
+    
+    
+    
+    ofPushMatrix();
     for(int i=0;i<particles.size();i++){
         particles[i].draw();
-      //  images[videoIndex%videos.size()].draw(particles[i].getPosition());
-
     }
+    ofPopMatrix();
   //  ofEnableBlendMode(OF_BLENDMODE_SCREEN);
    if(bShowMask)mask.draw(0,0);
-   // cout<<*boundingBoxPosition<<" "<<boundingBoxDimension->x<<endl;
    // ofDrawRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y);
-    
-    
     if(debug){
         //cout<<videos[videoIndex%videos.size()]->getPosition()<<endl;
-        float w=ofMap(videos[videoIndex%videos.size()]->getPosition(),0,1,0,ofGetWidth());
+        float w=ofMap(videos[videoIndex%videos.size()]->getPosition(),0,1,0,1080);
         ofPushStyle();
         ofFill();
         ofSetColor(255,0,0);
@@ -225,7 +232,7 @@ void ofApp::keyPressed(int key){
     }
 
     
-    if(key=='f'){
+    if(key=='s'){
         
         shake();
        
@@ -263,6 +270,11 @@ void ofApp::keyPressed(int key){
         for(int i=0;i<particles.size();i++){
             particles[i].setBoundingBox(ofRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y));
         }
+    }
+    
+    
+    if(key=='f'){
+        ofToggleFullscreen();
     }
     
 }
