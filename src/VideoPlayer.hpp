@@ -50,6 +50,10 @@ void showVideo(bool _showVideo);
     
     void threadedFunction();
 
+    
+    float getDuration();
+    float getPosition();
+    
 private:
     //shared_ptr<Video> movieclip;
     //vector<Video> videos;

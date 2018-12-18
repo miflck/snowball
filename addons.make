@@ -2,4 +2,5 @@ ofxBox2d
 ofxEasing
 ofxJSON
 ofxJsonSettings
+ofxSimpleSerial
 ofxWatchdog

@@ -8,9 +8,7 @@ void ofApp::setup(){
     
     ofSetVerticalSync(true);
     Settings::get().load("data.json");
-
-
-    mask.load("mask_old.png");
+    mask.load("mask.png");
     
     boundingBoxPosition=&Settings::getVec2("boundingBoxPosition");
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
@@ -37,11 +35,11 @@ void ofApp::setup(){
                 if(ext=="mov"){
                     s=ofFilePath::removeExt(s);
                     vector<string> splitName = ofSplitString( s, "_");
-                    if(splitName.back()=="1"){
+                    if(splitName.back()=="01"){
                         vp->setIntroClip(ofFilePath::getAbsolutePath(newDir.getPath(i)));
                     }
                     
-                    if(splitName.back()=="2"){
+                    if(splitName.back()=="02"){
                         ofLogNotice(newDir.getPath(i));
                         vp->setIdleClip(ofFilePath::getAbsolutePath(newDir.getPath(i)));
                     }
@@ -55,11 +53,13 @@ void ofApp::setup(){
                     images.push_back(img);
                     vp->img=&img;
                 }
-               
+                
+                if(ext=="mp3"){
+
+                }
             }
             vp->setState(INIT);
             videos.push_back(vp);
-
         }
     }
     //Debug
@@ -89,22 +89,27 @@ void ofApp::setup(){
         o.setGravityForce(ofVec2f(0,00.02));
         o.addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(20,50));
         o.setBoundingBox(ofRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y));
+        o.addRotation(ofRandom(-1,1)*2);
         particles.push_back(o);
     }
-    o.setImage(&images[0]);
-    o.setNewImage(&images[0],ofRandom(2));
-
-    o.setup();
-    o.setPosition(ofGetWidth()/2, ofGetHeight()/2);
-    o.setMaxSpeed(20);
-    o.bSeekTarget=false;
-    o.setSeekForce(0);
-    //o.setSpeed(1,1);
-    //o.setWanderForce(1);
-    o.setGravity(true);
-    o.setGravityForce(ofVec2f(0,00.05));
-    //o.setTarget(ofVec2f(ofGetWidth(),ofGetHeight()));
-
+   
+    
+    if(bUseSerial){
+    serial.listDevices();
+    vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
+    
+    // this should be set to whatever com port your serial device is connected to.
+    // (ie, COM4 on a pc, /dev/tty.... on linux, /dev/tty... on a mac)
+    // arduino users check in arduino app....
+    int baud = 9600;//115200;
+    serial.setup(0, baud); //open the first device
+    
+    // serial.setup("/dev/tty.usbserial-A70060V8", 9600);
+    serial.startContinuousRead();
+    ofAddListener(serial.NEW_MESSAGE,this,&ofApp::onNewMessage);
+    
+    message = "";
+    }
 }
 
 //--------------------------------------------------------------
@@ -119,8 +124,11 @@ void ofApp::update(){
     for(int i=0;i<particles.size();i++){
         particles[i].update();
     }
-    o.update();
 
+    
+    
+    if(bUseSerial)cout<<datamanager.getFloatAverage()<<endl;
+    
 }
 
 //--------------------------------------------------------------
@@ -131,38 +139,40 @@ void ofApp::draw(){
   //  video->draw();
     ofPopMatrix();
     
+    //ofEnableBlendMode(OF_BLENDMODE_SCREEN);
+   // ofEnableAlphaBlending();
     for(int i=0;i<particles.size();i++){
         particles[i].draw();
       //  images[videoIndex%videos.size()].draw(particles[i].getPosition());
 
     }
-    o.draw();
-    mask.draw(0,0);
+  //  ofEnableBlendMode(OF_BLENDMODE_SCREEN);
+   if(bShowMask)mask.draw(0,0);
    // cout<<*boundingBoxPosition<<" "<<boundingBoxDimension->x<<endl;
    // ofDrawRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y);
+    
+    
+    if(debug){
+        //cout<<videos[videoIndex%videos.size()]->getPosition()<<endl;
+        float w=ofMap(videos[videoIndex%videos.size()]->getPosition(),0,1,0,ofGetWidth());
+        ofPushStyle();
+        ofFill();
+        ofSetColor(255,0,0);
+        ofDrawRectangle(0, 0,w, 50);
+        ofPopStyle();
+    }
 }
 
 
 
 
 void ofApp::next(){
-   // if(video->getState()==IDLE){
-        videos[videoIndex%videos.size()]->stopAndReset();
-    
-    
-    
-    
-        videoIndex++;
-
-       /*if(videos.size()>0){
-            video=videos[videoIndex%videos.size()];
-           video->setState(INTRO);
-        }*/
+    videos[videoIndex%videos.size()]->stopAndReset();
+    videoIndex++;
     videos[videoIndex%videos.size()]->setState(INTRO);
-  //  }
     
     for(int i=0;i<particles.size();i++){
-        particles[i].setNewImage(&images[videoIndex%videos.size()],ofRandom(5));
+        particles[i].setNewImage(&images[videoIndex%videos.size()],ofRandom(imageFadeDuration));
     }
     
 }
@@ -181,6 +191,29 @@ void ofApp::debugNext(){
 }
 */
 
+
+
+
+
+void ofApp::shake(){
+    
+    if(videos[videoIndex%videos.size()]->getState()==INTRO){
+        for(int i=0;i<particles.size();i++){
+            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(10));
+            particles[i].setDampingDuration(ofRandom(5,10));
+            particles[i].addRotation(ofRandom(-1,1)*10);
+            }
+    }else{
+        for(int i=0;i<particles.size();i++){
+            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(20,50));
+            particles[i].addRotation(ofRandom(-1,1)*2);
+            
+        }
+        next();
+    }
+    
+}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if(key =='n'){
@@ -194,25 +227,42 @@ void ofApp::keyPressed(int key){
     
     if(key=='f'){
         
-        
-        for(int i=0;i<particles.size();i++){
-            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(20,50));
-        }
-        
-        o.addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0,-1)*10), 50);
-    }
-    
-    
-    if(key=='b'){
-        //  mover.setSlowDown(true);
-        boundingBoxPosition->set(ofGetMouseX(),ofGetMouseY());
-        Settings::get().save("data.json");
+        shake();
+       
     }
     
     
     if(key=='d'){
+        
+        debug=!debug;
+        
+    }
+    if(key=='m'){
+        bShowMask=!bShowMask;
+    }
+    
+    
+    if(key=='B'){
+        //  mover.setSlowDown(true);
+        boundingBoxPosition->set(ofGetMouseX(),ofGetMouseY());
+        Settings::get().save("data.json");
+        
+        
+        for(int i=0;i<particles.size();i++){
+            particles[i].setBoundingBox(ofRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y));
+            
+        }
+        
+    }
+    
+    
+    if(key=='D'){
         boundingBoxDimension->set(ofGetMouseX()-boundingBoxPosition->x,ofGetMouseY()-boundingBoxPosition->y);
         Settings::get().save("data.json");
+        
+        for(int i=0;i<particles.size();i++){
+            particles[i].setBoundingBox(ofRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y));
+        }
     }
     
 }
@@ -265,4 +315,21 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+void ofApp::onNewMessage(string & message)
+{
+    cout << "onNewMessage, message: " << message << "\n";
+   string firstWord= ofSplitString(message, ",")[0];
+    if(ofToFloat(firstWord)> 420 || ofToFloat(firstWord)< 395){
+        for(int i=0;i<particles.size();i++){
+            particles[i].addForce(ofVec2f(ofRandom(-1,1),ofRandom(0.5,-1)),message[1]);
+        }
+        
+        
+    }
+    
+    
+    datamanager.addFloatValue(ofToFloat(firstWord));
+    
 }

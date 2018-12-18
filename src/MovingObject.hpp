@@ -136,10 +136,14 @@ public:
     void setNewImage(ofImage *_img, float _duration);
 
     
+    void addRotation(float _s);
     
+    void setDampingDuration(float _d);
 
 private:
     
+    
+    float groundOffset;
     
     ofImage *image;
     ofImage *newimage;
@@ -150,7 +154,6 @@ private:
     
     float damping=0.9999;
     float dampingInit=0.9999;
-
     float dampingTarget=0.99;
     float dampDuration=10;
     float dampingInitTime;
@@ -161,6 +164,13 @@ private:
     float actualFade=0;
     float fadeDuration=5;
     float fadeInitTime;
+    
+    
+    float rotationInit=10;
+    float rotationTarget=0;
+    float actualRotationSpeed=10;
+    float rotateDuration=10;
+    float rotationInitTime;
     
     
     float bounceDamping=0.01;
@@ -191,6 +201,11 @@ private:
     
     ofRectangle boundingBox;
     
+    
+    float rotationspeed;
+    float actualRotation;
+    
+    float maxLandingSpeed=3;
     
 };
 

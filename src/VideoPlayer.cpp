@@ -207,3 +207,25 @@ void VideoPlayer::threadedFunction(){
     video->setPaused(true);
     video->setFrame(0);
 }
+
+float VideoPlayer::getDuration(){
+    if(getState()==IDLE){
+        return idleClip->getDuration();
+    }else if(getState()==INTRO){
+        return introClip->getDuration();
+
+    }
+    
+}
+
+float VideoPlayer::getPosition(){
+    if(getState()==IDLE){
+        return  idleClip->getPosition();
+        
+    }else if(getState()==INTRO){
+        return  introClip->getPosition();
+
+    }
+    
+    
+}

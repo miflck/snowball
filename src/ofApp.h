@@ -5,7 +5,8 @@
 
 #include "MovingObject.hpp"
 #include "ofxJsonSettings.h"
-
+#include "ofxSimpleSerial.h"
+#include "DataManager.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -32,11 +33,17 @@ class ofApp : public ofBaseApp{
     
     vector <MovingObject> particles;
     
-    MovingObject o;
-
     void next();
     void debugNext();
+    
+    void shake();
 
+    
+    
+    bool debug=true;
+    
+    bool bShowMask=true;
+    
 private:
     int videoIndex=0;
     
@@ -47,5 +54,15 @@ private:
     ofVec2f *boundingBoxPosition;
     ofVec2f *boundingBoxDimension;
 
+    
+    bool bUseSerial=false;
+    ofxSimpleSerial    serial;
+    void        onNewMessage(string & message);
+    string        message;
+    bool        requestRead;
+    
+    DataManager datamanager;
+    
+    float imageFadeDuration=10;
 		
 };

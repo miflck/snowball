@@ -30,12 +30,25 @@ void MovingObject::setup(){
      change=0.5f;
     
     wanderforce=10;
+    
+    
+    groundOffset=ofRandom(0,30);
+    bHasReached=false;
 }
 
 void MovingObject::update(){
     auto endTime = easingInitTime + scaleDuration;
     auto now = ofGetElapsedTimef();
+    //cout<<velocityBefore.length()<<endl;
+    
+    if(!bHasReached){
+        actualRotation+=rotationspeed;
+    }
+    
+    
     move();
+    
+    
     actualRadius = ofxeasing::map_clamp(now, easingInitTime, endTime, initRadius, radiusTarget, &ofxeasing::linear::easeIn);
     velocityBefore=velocity;
     
@@ -47,8 +60,20 @@ void MovingObject::update(){
     auto damptingEndTime = dampingInitTime + dampDuration;
     damping = ofxeasing::map_clamp(now, dampingInitTime, damptingEndTime, dampingInit, dampingTarget, &ofxeasing::linear::easeNone);
     
+    auto rotationEndTime = rotationInitTime + rotateDuration;
+    actualRotationSpeed = ofxeasing::map_clamp(now, rotationInitTime, rotationEndTime, rotationInit, rotationTarget, &ofxeasing::linear::easeNone);
+    
+    rotationspeed=actualRotationSpeed;
+    
+    
+    
+    
     auto fadeEndTime = fadeInitTime + fadeDuration;
     actualFade = ofxeasing::map_clamp(now, fadeInitTime, fadeEndTime, fadeInit, fadeTarget, &ofxeasing::linear::easeNone);
+
+
+
+
 
 }
 
@@ -79,7 +104,7 @@ void MovingObject::move(){
 
     */
     
-    
+    if(bHasReached)return;
     if(bWander) applyForce(wander(wanderforce));
     if(bSeekTarget) applyForce(seek(target,seekforce));
     if(hasGravity())applyForce(gravity);
@@ -108,9 +133,6 @@ void MovingObject::move(){
     
     velocity*=damping;
     
-
-    
-
 }
 
 void MovingObject::makeNewWanderTarget(){
@@ -144,11 +166,15 @@ void MovingObject::draw(){
     ofPushMatrix();
     ofPushStyle();
   
+    ofTranslate(position.x,position.y);
+    ofRotate(actualRotation);
+    
+    
     ofSetColor(255,actualFade);
-    fadeInImage->draw(position.x-fadeInImage->getWidth()/2,position.y-fadeInImage->getHeight()/2);
+    fadeInImage->draw(-fadeInImage->getWidth()/2,-fadeInImage->getHeight()/2);
     
     ofSetColor(255,255-actualFade);
-    fadeOutImage->draw(position.x-fadeOutImage->getWidth()/2,position.y-fadeOutImage->getHeight()/2);
+    fadeOutImage->draw(-fadeOutImage->getWidth()/2,-fadeOutImage->getHeight()/2);
     
    // ofSetColor(255,actualFade);
    // ofDrawEllipse(position.x, position.y, actualRadius, actualRadius);
@@ -410,11 +436,26 @@ bool MovingObject::hasGravity(){
 }
 
 void MovingObject::bounceFromGround(){
-    if(getPosition().y+(actualRadius/2)>ofGetHeight()){
-        velocity.y=-velocity.y*bounceDamping;
-        velocity.x=-velocity.x*bounceDamping;
+    float h=boundingBox.y+boundingBox.getHeight();
+    if(getPosition().y+(actualRadius/2)+groundOffset>h){
+        if(getSpeed().length()<maxLandingSpeed){
+            velocity.y=-velocity.y*bounceDamping;
+            velocity.x=-velocity.x*bounceDamping;
+            setPosition(getPosition().x, h-(actualRadius/2)-groundOffset);
+            setReached(true);
+        }else{
+            
+            velocity.y=-velocity.y*bounceDamping;
+            velocity.x=-velocity.x*bounceDamping;
+            setPosition(getPosition().x, h-(actualRadius/2)-groundOffset);
+            setReached(true);
+            
+            //setPosition(getPosition().x, boundingBox.y);
 
-        setPosition(getPosition().x, ofGetHeight()-(actualRadius/2));
+         //   velocity.y=-velocity.y*topDamping;
+         //   velocity.x=-velocity.x*topDamping;
+            
+        }
     }
 }
 /*
@@ -496,10 +537,17 @@ void MovingObject::bounceFromSides(){
 }
 
 
+void MovingObject::addRotation(float _s){
+    //rotationspeed=_s;
+    rotationInit=_s;
+    rotationInitTime=ofGetElapsedTimef();
+}
+
 void MovingObject::addForce(ofVec2f fv, float f){
     externalForceVector=fv;
     externalforce=f;
     dampingInitTime=ofGetElapsedTimef();
+    setReached(false);
 }
 
 
@@ -541,4 +589,8 @@ void MovingObject::setNewImage(ofImage *_img,float _duration){
     //fadeOutImage=image;
 }
 
+
+void MovingObject::setDampingDuration(float _d){
+    dampDuration=_d;
+}
 
