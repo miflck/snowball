@@ -7,6 +7,8 @@
 #include "ofxJsonSettings.h"
 #include "ofxSimpleSerial.h"
 #include "DataManager.hpp"
+#include "ofxDatGui.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -43,6 +45,12 @@ class ofApp : public ofBaseApp{
     bool debug=true;
     
     bool bShowMask=true;
+    
+    ofxDatGuiSlider* minslider;
+    ofxDatGuiSlider* maxslider;
+
+    void onSliderEvent(ofxDatGuiSliderEvent e);
+    bool bShowGui=false;
     
 private:
     int videoIndex=0;

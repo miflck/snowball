@@ -1,4 +1,5 @@
 ofxBox2d
+ofxDatGui
 ofxEasing
 ofxJSON
 ofxJsonSettings

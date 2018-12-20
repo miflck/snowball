@@ -204,8 +204,15 @@ void VideoPlayer::showVideo(bool _showVideo){
 
 
 void VideoPlayer::threadedFunction(){
+
+    lock();
     video->setPaused(true);
     video->setFrame(0);
+    unlock();
+    
+    stopThread();
+
+    
 }
 
 float VideoPlayer::getDuration(){

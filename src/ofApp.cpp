@@ -110,10 +110,28 @@ void ofApp::setup(){
     
     message = "";
     }
+    
+    
+    
+    minslider = new ofxDatGuiSlider("MIN", 0, 1000, 20);
+    minslider->setWidth(600, .2); // make label area 20% of width //
+    minslider->setPosition(0, 200);
+    minslider->onSliderEvent(this, &ofApp::onSliderEvent);
+ 
+    maxslider = new ofxDatGuiSlider("MAX", 0, 1000, 20);
+    maxslider->setWidth(600, .2); // make label area 20% of width //
+    maxslider->setPosition(0, 250);
+    maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
+    minslider->update();
+    maxslider->update();
+
+    
     for(int i=0;i<videos.size();i++){
         videos[i]->update();
     }
@@ -135,8 +153,10 @@ void ofApp::update(){
 void ofApp::draw(){
     ofPushMatrix();
     ofPushStyle();
-    ofTranslate(1920, 0);
-   // ofScale(0.5,0.5);
+   // ofTranslate(1920, 0);
+    ofTranslate(0, 0);
+
+    // ofScale(0.5,0.5);
      videos[videoIndex%videos.size()]->draw();
     ofSetColor(255,0,0);
 
@@ -167,6 +187,14 @@ void ofApp::draw(){
         ofSetColor(255,0,0);
         ofDrawRectangle(0, 0,w, 50);
         ofPopStyle();
+    }
+    
+    
+    
+    
+    if(bShowGui){
+        minslider->draw();
+        maxslider->draw();
     }
 }
 
@@ -223,6 +251,12 @@ void ofApp::shake(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    
+    if(key=='g'){
+        bShowGui=!bShowGui;
+        
+    }
+    
     if(key =='n'){
         next();
     }
@@ -329,19 +363,61 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
+
+void ofApp::onSliderEvent(ofxDatGuiSliderEvent e)
+{
+    if(e.target == minslider){
+        ofSetBackgroundColor(ofColor::white*e.scale);
+        cout << e.target->getLabel() << " value = "; e.target->printValue();
+    }   else if (e.target == maxslider){
+        cout << e.target->getLabel() << " value = "; e.target->printValue();
+    }  /* else if (e.target == sliderFloat){
+        cout << e.target->getLabel() << " value = "; e.target->printValue();
+    }*/
+}
+
+
+
+
 void ofApp::onNewMessage(string & message)
 {
-    cout << "onNewMessage, message: " << message << "\n";
+   // cout << "onNewMessage, message: " << message << "\n";
    string firstWord= ofSplitString(message, ",")[0];
-    if(ofToFloat(firstWord)> 420 || ofToFloat(firstWord)< 395){
-        for(int i=0;i<particles.size();i++){
-            particles[i].addForce(ofVec2f(ofRandom(-1,1),ofRandom(0.5,-1)),message[1]);
+    
+    
+    
+    
+    if(videos[videoIndex%videos.size()]->getState()==INTRO){
+        
+        
+        if(ofToFloat(firstWord)> 500 || ofToFloat(firstWord)< 200){
+            
+            // if(ofToFloat(firstWord)> maxslider->getValue() || ofToFloat(firstWord)< minslider->getValue()){
+            for(int i=0;i<particles.size();i++){
+                particles[i].addForce(ofVec2f(ofRandom(-1,1),ofRandom(0.5,-1)),message[1]/10);
+            }
         }
+    }else{
         
         
+        if(ofToFloat(firstWord)> 500 || ofToFloat(firstWord)< 200){
+            
+            // if(ofToFloat(firstWord)> maxslider->getValue() || ofToFloat(firstWord)< minslider->getValue()){
+            for(int i=0;i<particles.size();i++){
+                particles[i].addForce(ofVec2f(ofRandom(-1,1),ofRandom(0.5,-1)),message[1]/10);
+            }
+        }
+        next();
     }
     
     
+    
+    
+    
+    
+    
+    
+  
     datamanager.addFloatValue(ofToFloat(firstWord));
     
 }
