@@ -35,9 +35,12 @@ void VideoPlayer::setup(){
 
 void VideoPlayer::update(){
     //bool isLoaded=true;
-    
-    introClip->update();
+  //  if(introClip->isFrameNew()){
+        introClip->update();
+   // }
+   // if(idleClip->isFrameNew()){
     idleClip->update();
+   // }
 
     
    /* switch (state) {
@@ -102,15 +105,30 @@ void VideoPlayer::draw(){
 
 
 void VideoPlayer::setIntroClip(string p){
-    introClip->load(p);
+  //  introClip->loadAsync(p);
+    introclipPath=p;
     cout<<"loading intro"<<p<<endl;
     introClip->setLoopState(OF_LOOP_NONE);
 }
 
 void VideoPlayer::setIdleClip(string p){
-    idleClip->load(p);
+  //  idleClip->loadAsync(p);
+    idleclipPath=p;
     cout<<"loading idle "<<p<<endl;
 
+}
+
+
+void VideoPlayer::loadIntroclip(){
+    cout<<"************ load intro "<<introclipPath<<" *********"<<endl;
+    introClip->loadAsync(introclipPath);
+    introClip->setLoopState(OF_LOOP_NONE);
+
+}
+
+void VideoPlayer::loadIdleclip(){
+    cout<<"************ load idle "<<idleclipPath<<" *********"<<endl;
+    idleClip->loadAsync(idleclipPath);
 }
 
 void VideoPlayer::setState(int _state){
@@ -129,7 +147,9 @@ void VideoPlayer::setState(int _state){
                 
                 stopAndResetIdle();
                // idleClip->setFrame(0);
-                introClip->play();
+                if(introClip->isFrameNew()){
+                    introClip->play();
+                }
             }
             break;
             
@@ -147,8 +167,9 @@ void VideoPlayer::setState(int _state){
                 }*/
                // introClip->setFrame(0);
                 
-                
-                idleClip->play();
+                if(idleClip->isFrameNew()){
+                    idleClip->play();
+                }
             }
             break;
             
@@ -179,7 +200,9 @@ void VideoPlayer::stopAndResetIntro(){
 //    introClip->setPosition(0);
     
     video=introClip;
-    startThread();
+   // startThread();
+    
+    rewinder.setVideoPointer(introClip);
     
 }
 void VideoPlayer::stopAndResetIdle(){
@@ -187,7 +210,10 @@ void VideoPlayer::stopAndResetIdle(){
     idleClip->setPosition(0);
     */
     video=idleClip;
-    startThread();
+    //startThread();
+    
+    rewinder.setVideoPointer(idleClip);
+
 }
 
 void VideoPlayer::stopAndReset(){
@@ -205,12 +231,12 @@ void VideoPlayer::showVideo(bool _showVideo){
 
 void VideoPlayer::threadedFunction(){
 
-    lock();
+ /*   lock();
     video->setPaused(true);
     video->setFrame(0);
     unlock();
-    
-    stopThread();
+    */
+ //   stopThread();
 
     
 }

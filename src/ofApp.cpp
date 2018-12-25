@@ -10,6 +10,12 @@ void ofApp::setup(){
     Settings::get().load("data.json");
     mask.load("mask.png");
     
+    shared_ptr<VideoPlayer> lastvideo(new VideoPlayer);
+    shared_ptr<VideoPlayer> thisvideo(new VideoPlayer);
+    shared_ptr<VideoPlayer> nextvideo(new VideoPlayer);
+
+    
+    
     boundingBoxPosition=&Settings::getVec2("boundingBoxPosition");
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
 
@@ -70,8 +76,17 @@ void ofApp::setup(){
    // video->start();
     
     
-    videos[0]->setState(INTRO);
+    
+    lastvideo=videos[videos.size()-1];
+    thisvideo=videos[0];
+    nextvideo=videos[1];
 
+
+    
+    
+//    videos[0]->setState(INTRO);
+
+    thisvideo->setState(INTRO);
     
     for(int i=0;i<1000;i++){
         MovingObject o;
@@ -132,12 +147,16 @@ void ofApp::update(){
     maxslider->update();
 
     
-    for(int i=0;i<videos.size();i++){
-        videos[i]->update();
-    }
+   // for(int i=0;i<videos.size();i++){
+   //     videos[i]->update();
+   // }
   //  video->update();
 
     //videos[videoIndex%videos.size()]->update();
+    
+    lastvideo->update();
+    thisvideo->update();
+    nextvideo->update();
     
     for(int i=0;i<particles.size();i++){
         particles[i].update();
@@ -157,7 +176,8 @@ void ofApp::draw(){
     ofTranslate(0, 0);
 
     // ofScale(0.5,0.5);
-     videos[videoIndex%videos.size()]->draw();
+    // videos[videoIndex%videos.size()]->draw();
+    thisvideo->draw();
     ofSetColor(255,0,0);
 
     ofDrawLine(0, 0, 0, 1080);
@@ -206,8 +226,13 @@ void ofApp::next(){
     videoIndex++;
     videos[videoIndex%videos.size()]->setState(INTRO);
     
+    lastvideo=thisvideo;
+    thisvideo=nextvideo;
+ 
+    
+    
     for(int i=0;i<particles.size();i++){
-        particles[i].setNewImage(&images[videoIndex%videos.size()],ofRandom(imageFadeDuration));
+        //particles[i].setNewImage(&images[videoIndex%videos.size()],ofRandom(imageFadeDuration));
     }
     
 }

@@ -11,13 +11,14 @@
 #include <stdio.h>
 #include "ofMain.h"
 #include "Video.hpp"
+#include "VideoRewinder.hpp"
 
 
 #define INIT 000
 #define INTRO 100
 #define IDLE 200
 
-class VideoPlayer: public ofBaseApp, ofThread{
+class VideoPlayer: public ofBaseApp{
 
 public:
 VideoPlayer();
@@ -54,6 +55,12 @@ void showVideo(bool _showVideo);
     float getDuration();
     float getPosition();
     
+    
+    void loadIntroclip();
+    void loadIdleclip();
+    
+    VideoRewinder rewinder;
+    
 private:
     //shared_ptr<Video> movieclip;
     //vector<Video> videos;
@@ -71,6 +78,9 @@ private:
     
     bool bIsVideoLoaded;
     bool bShowVideo=false;
+    
+    string introclipPath;
+    string idleclipPath;
 
 };
 #endif /* VideoPlayer_hpp */
