@@ -58,6 +58,8 @@ void showVideo(bool _showVideo);
     
     void loadIntroclip();
     void loadIdleclip();
+    string getIntroPath();
+    string getIdlePath();
     
     VideoRewinder rewinder;
     

@@ -1,6 +1,7 @@
 ofxBox2d
 ofxDatGui
 ofxEasing
+ofxGaplessVideo
 ofxJSON
 ofxJsonSettings
 ofxSimpleSerial

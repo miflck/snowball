@@ -111,11 +111,18 @@ void VideoPlayer::setIntroClip(string p){
     introClip->setLoopState(OF_LOOP_NONE);
 }
 
+string VideoPlayer::getIntroPath(){
+    return introclipPath;
+}
+
 void VideoPlayer::setIdleClip(string p){
   //  idleClip->loadAsync(p);
     idleclipPath=p;
     cout<<"loading idle "<<p<<endl;
 
+}
+string VideoPlayer::getIdlePath(){
+    return idleclipPath;
 }
 
 

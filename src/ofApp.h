@@ -9,6 +9,8 @@
 #include "DataManager.hpp"
 #include "ofxDatGui.h"
 
+#include "ofxGaplessVideoplayer.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -79,5 +81,8 @@ private:
     DataManager datamanager;
     
     float imageFadeDuration=10;
+    
+    ofxGaplessVideoPlayer   MO;
+
 		
 };

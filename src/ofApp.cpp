@@ -38,7 +38,7 @@ void ofApp::setup(){
                 string ext = ofFilePath::getFileExt(s);
 
                 // load movies
-                if(ext=="mov"){
+                if(ext=="mp4"){
                     s=ofFilePath::removeExt(s);
                     vector<string> splitName = ofSplitString( s, "_");
                     if(splitName.back()=="01"){
@@ -76,11 +76,11 @@ void ofApp::setup(){
    // video->start();
     
     
-    
+    /*
     lastvideo=videos[videos.size()-1];
     thisvideo=videos[0];
     nextvideo=videos[1];
-
+*/
 
     
     
@@ -138,6 +138,9 @@ void ofApp::setup(){
     maxslider->setPosition(0, 250);
     maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
     
+    MO.start();
+
+    
 }
 
 //--------------------------------------------------------------
@@ -154,9 +157,9 @@ void ofApp::update(){
 
     //videos[videoIndex%videos.size()]->update();
     
-    lastvideo->update();
-    thisvideo->update();
-    nextvideo->update();
+   // lastvideo->update();
+   // thisvideo->update();
+   // nextvideo->update();
     
     for(int i=0;i<particles.size();i++){
         particles[i].update();
@@ -165,7 +168,8 @@ void ofApp::update(){
     
     
     if(bUseSerial)cout<<datamanager.getFloatAverage()<<endl;
-    
+    MO.update();
+
 }
 
 //--------------------------------------------------------------
@@ -177,7 +181,10 @@ void ofApp::draw(){
 
     // ofScale(0.5,0.5);
     // videos[videoIndex%videos.size()]->draw();
-    thisvideo->draw();
+    //thisvideo->draw();
+    float w = MO.getWidth();
+    float h = MO.getHeight();
+    MO.draw(0,0 , w, h);
     ofSetColor(255,0,0);
 
     ofDrawLine(0, 0, 0, 1080);
@@ -202,6 +209,8 @@ void ofApp::draw(){
     if(debug){
         //cout<<videos[videoIndex%videos.size()]->getPosition()<<endl;
         float w=ofMap(videos[videoIndex%videos.size()]->getPosition(),0,1,0,1080);
+        cout<<MO.getCurrentMovie()<<endl;
+        
         ofPushStyle();
         ofFill();
         ofSetColor(255,0,0);
@@ -222,14 +231,17 @@ void ofApp::draw(){
 
 
 void ofApp::next(){
-    videos[videoIndex%videos.size()]->stopAndReset();
+ //   videos[videoIndex%videos.size()]->stopAndReset();
     videoIndex++;
-    videos[videoIndex%videos.size()]->setState(INTRO);
+ //   videos[videoIndex%videos.size()]->setState(INTRO);
     
-    lastvideo=thisvideo;
-    thisvideo=nextvideo;
- 
-    
+  //  lastvideo=thisvideo;
+  //  thisvideo=nextvideo;
+    cout<<"------------------"<<videos[videoIndex%videos.size()]->getIntroPath()<<endl;
+    MO.loadMovie(videos[videoIndex%videos.size()]->getIntroPath(), true,true);
+
+    MO.appendMovie(videos[videoIndex%videos.size()]->getIdlePath(),false,false);
+
     
     for(int i=0;i<particles.size();i++){
         //particles[i].setNewImage(&images[videoIndex%videos.size()],ofRandom(imageFadeDuration));
