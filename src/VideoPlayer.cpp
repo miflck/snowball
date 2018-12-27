@@ -34,11 +34,43 @@ void VideoPlayer::setup(){
 //--------------------------------------------------------------
 
 void VideoPlayer::update(){
+    
+    
+
+    
     //bool isLoaded=true;
     
-    introClip->update();
-    idleClip->update();
+   // if(introClip->isFrameNew()){
+      //  introClip->update();//}
+   // if(idleClip->isFrameNew()){
+      //  idleClip->update();//}
 
+    
+    switch (state) {
+     case INTRO:
+         //   if(introClip->isLoaded()&!introClip->isPlaying()){
+         //       introClip->play();
+         //   }
+
+     if(introClip->isLoaded()){
+     introClip->update();
+     }
+     break;
+     
+     case IDLE:
+     if(idleClip->isLoaded()){
+     idleClip->update();
+     
+     }
+     
+     break;
+     
+     default:
+     break;
+     }
+
+    
+    
     
    /* switch (state) {
         case INTRO:
@@ -102,19 +134,20 @@ void VideoPlayer::draw(){
 
 
 void VideoPlayer::setIntroClip(string p){
-     introClip->setPixelFormat(OF_PIXELS_NATIVE);
+    // introClip->setPixelFormat(OF_PIXELS_NATIVE);
 
-    introClip->loadAsync(p);
-    cout<<"loading intro"<<p<<endl;
-    introClip->setLoopState(OF_LOOP_NONE);
+    //introClip->loadAsync(p);
+    //cout<<"loading intro"<<p<<endl;
+    introClipPath=p;
+    //introClip->setLoopState(OF_LOOP_NONE);
 }
 
 void VideoPlayer::setIdleClip(string p){
-    idleClip->setPixelFormat(OF_PIXELS_NATIVE);
+   // idleClip->setPixelFormat(OF_PIXELS_NATIVE);
 
-    idleClip->loadAsync(p);
-
-    cout<<"loading idle "<<p<<endl;
+  //  idleClip->loadAsync(p);
+    idleClipPath=p;
+   // cout<<"loading idle "<<p<<endl;
 
 }
 
@@ -132,7 +165,7 @@ void VideoPlayer::setState(int _state){
                     startThread(idleClip);
                 }*/
                 
-                stopAndResetIdle();
+                //stopAndResetIdle();
                // idleClip->setFrame(0);
                 introClip->play();
             }
@@ -140,7 +173,7 @@ void VideoPlayer::setState(int _state){
             
         case IDLE:
             if(idleClip->isLoaded()){
-                stopAndResetIntro();
+              //  stopAndResetIntro();
              //  introClip->setPaused(true);
              //  idleClip->firstFrame();
              //   idleClip->stop();
@@ -240,4 +273,16 @@ float VideoPlayer::getPosition(){
     }
     
     
+}
+
+void VideoPlayer::loadVideos(){
+    introClip->loadAsync(introClipPath);
+    idleClip->loadAsync(idleClipPath);
+}
+void VideoPlayer::closeVideos(){
+    cout<<"---------------close---------"<<endl;
+    introClip->setPaused(true);
+    introClip->close();
+    idleClip->setPaused(true);
+    idleClip->close();
 }

@@ -72,7 +72,19 @@ void ofApp::setup(){
    // video->start();
     
     
-    videos[0]->setState(INTRO);
+   // videos[0]->setState(INTRO);
+    
+    lastvideo=videos[videos.size()-1];
+    thisvideo=videos[0];
+    thisvideo->loadVideos();
+    thisvideo->setState(INTRO);
+    nextvideo=videos[1];
+    nextvideo->loadVideos();
+    
+    
+    
+
+
 
     
     for(int i=0;i<1000;i++){
@@ -137,6 +149,11 @@ void ofApp::update(){
     for(int i=0;i<videos.size();i++){
         videos[i]->update();
     }
+    
+    lastvideo->update();
+    thisvideo->update();
+    nextvideo->update();
+    
   //  video->update();
 
     //videos[videoIndex%videos.size()]->update();
@@ -159,7 +176,8 @@ void ofApp::draw(){
     ofTranslate(0, 0);
 
     // ofScale(0.5,0.5);
-     videos[videoIndex%videos.size()]->draw();
+     //videos[videoIndex%videos.size()]->draw();
+    thisvideo->draw();
     ofSetColor(255,0,0);
 
     ofDrawLine(0, 0, 0, 1080);
@@ -183,7 +201,9 @@ void ofApp::draw(){
    // ofDrawRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y);
     if(debug){
         //cout<<videos[videoIndex%videos.size()]->getPosition()<<endl;
-        float w=ofMap(videos[videoIndex%videos.size()]->getPosition(),0,1,0,1080);
+        //float w=ofMap(videos[videoIndex%videos.size()]->getPosition(),0,1,0,1080);
+        float w=ofMap(thisvideo->getPosition(),0,1,0,1080);
+
         ofPushStyle();
         ofFill();
         ofSetColor(255,0,0);
@@ -204,13 +224,26 @@ void ofApp::draw(){
 
 
 void ofApp::next(){
-    videos[videoIndex%videos.size()]->stopAndReset();
-    videoIndex++;
-    videos[videoIndex%videos.size()]->setState(INTRO);
+   // videos[videoIndex%videos.size()]->stopAndReset();
     
+    
+    // video index is for next video, so take old value for actual pic
     for(int i=0;i<particles.size();i++){
         particles[i].setNewImage(&images[videoIndex%videos.size()],ofRandom(imageFadeDuration));
     }
+    
+    videoIndex++;
+   // videos[videoIndex%videos.size()]->setState(INTRO);
+    lastvideo=thisvideo;
+    
+    lastvideo->closeVideos();
+    
+    thisvideo=nextvideo;
+    thisvideo->setState(INTRO);
+    nextvideo=videos[videoIndex%videos.size()];
+    nextvideo->loadVideos();
+    
+ 
     
 }
 /*
@@ -244,7 +277,8 @@ void ofApp::shake(){
         for(int i=0;i<particles.size();i++){
             particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(20,50));
             particles[i].addRotation(ofRandom(-1,1)*2);
-            
+            particles[i].setDampingDuration(ofRandom(5,10));
+
         }
         next();
     }

@@ -32,6 +32,10 @@ class ofApp : public ofBaseApp{
     
         vector<shared_ptr<VideoPlayer> > videos;
       //  shared_ptr<VideoPlayer> video;
+    shared_ptr<VideoPlayer> lastvideo;
+     shared_ptr<VideoPlayer> thisvideo;
+    shared_ptr<VideoPlayer> nextvideo;
+
     
     vector <MovingObject> particles;
     

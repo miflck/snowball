@@ -40,7 +40,8 @@ void showVideo(bool _showVideo);
     void setIntroClip(string p);
     void setIdleClip(string p);
     
-    
+    string introClipPath;
+    string idleClipPath;
     void stopAndReset();
     
     void stopAndResetIdle();
@@ -53,6 +54,9 @@ void showVideo(bool _showVideo);
     
     float getDuration();
     float getPosition();
+    
+    void loadVideos();
+    void closeVideos();
     
 private:
     //shared_ptr<Video> movieclip;
