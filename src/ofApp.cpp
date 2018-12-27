@@ -32,7 +32,9 @@ void ofApp::setup(){
                 string ext = ofFilePath::getFileExt(s);
 
                 // load movies
-                if(ext=="mov"){
+               // if(ext=="mov"){
+                    if(ext=="mp4"){
+
                     s=ofFilePath::removeExt(s);
                     vector<string> splitName = ofSplitString( s, "_");
                     if(splitName.back()=="01"){

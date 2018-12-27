@@ -77,7 +77,6 @@
 		F32187D344F58022DFD48C0F /* b2ContactSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0470D1543962FEC83BB4973 /* b2ContactSolver.cpp */; };
 		F387370DB571155BC1282B7D /* b2CollideEdge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB5229C686C3BB08137BA36D /* b2CollideEdge.cpp */; };
 		FA7300BAC71DAC1ABAF6EE15 /* b2Fixture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 774DDD1B3F05D3FDF0D37794 /* b2Fixture.cpp */; };
-		FAE1F61121CB8647009536B6 /* VideoRewinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE1F61021CB8647009536B6 /* VideoRewinder.cpp */; };
 		FB84AAF8D1B7A95266DB5C09 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 21BDE665988474F1B1F4D302 /* jsoncpp.cpp */; };
 /* End PBXBuildFile section */
 
@@ -281,8 +280,6 @@
 		F672EBFCB4887C08BBB23527 /* b2Math.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = b2Math.cpp; path = ../../../addons/ofxBox2d/libs/Box2D/Common/b2Math.cpp; sourceTree = SOURCE_ROOT; };
 		F7D2102660E69CDA6D15B64A /* ofxBox2d.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBox2d.h; path = ../../../addons/ofxBox2d/src/ofxBox2d.h; sourceTree = SOURCE_ROOT; };
 		FA784162B6A8E3A77BBE4D6C /* b2TimeStep.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = b2TimeStep.h; path = ../../../addons/ofxBox2d/libs/Box2D/Dynamics/b2TimeStep.h; sourceTree = SOURCE_ROOT; };
-		FAE1F60F21CB8646009536B6 /* VideoRewinder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VideoRewinder.hpp; sourceTree = "<group>"; };
-		FAE1F61021CB8647009536B6 /* VideoRewinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoRewinder.cpp; sourceTree = "<group>"; };
 		FD20B1FFE795860DB1C68BF2 /* b2ChainAndCircleContact.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = b2ChainAndCircleContact.cpp; path = ../../../addons/ofxBox2d/libs/Box2D/Dynamics/Contacts/b2ChainAndCircleContact.cpp; sourceTree = SOURCE_ROOT; };
 		FDA86F4C2F1F1964D35391C6 /* ofxDatGuiButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxDatGuiButton.h; path = ../../../addons/ofxDatGui/src/components/ofxDatGuiButton.h; sourceTree = SOURCE_ROOT; };
 		FF2B018E24837032A4878576 /* ofxEasing.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasing.h; path = ../../../addons/ofxEasing/src/ofxEasing.h; sourceTree = SOURCE_ROOT; };
@@ -720,8 +717,6 @@
 				1597FFD541B1592B67260C19 /* Video.hpp */,
 				D72634EFAB162235913ADF19 /* VideoPlayer.cpp */,
 				61A4CDD010E648929F4A473B /* VideoPlayer.hpp */,
-				FAE1F61021CB8647009536B6 /* VideoRewinder.cpp */,
-				FAE1F60F21CB8646009536B6 /* VideoRewinder.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -886,7 +881,6 @@
 				087EF9D9A08A51AB1976D30B /* MovingObject.cpp in Sources */,
 				529752D7400D2D05A98607D1 /* Video.cpp in Sources */,
 				B5AD0C336F04005F83EC6681 /* VideoPlayer.cpp in Sources */,
-				FAE1F61121CB8647009536B6 /* VideoRewinder.cpp in Sources */,
 				B16C89D9CA996CA8FD860D81 /* ofxBox2d.cpp in Sources */,
 				F2FF2F9D6699B4B328CB6BE3 /* ofxBox2dBaseShape.cpp in Sources */,
 				AE9254BC31C3409899D28DC9 /* ofxBox2dCircle.cpp in Sources */,

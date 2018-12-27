@@ -102,13 +102,18 @@ void VideoPlayer::draw(){
 
 
 void VideoPlayer::setIntroClip(string p){
-    introClip->load(p);
+     introClip->setPixelFormat(OF_PIXELS_NATIVE);
+
+    introClip->loadAsync(p);
     cout<<"loading intro"<<p<<endl;
     introClip->setLoopState(OF_LOOP_NONE);
 }
 
 void VideoPlayer::setIdleClip(string p){
-    idleClip->load(p);
+    idleClip->setPixelFormat(OF_PIXELS_NATIVE);
+
+    idleClip->loadAsync(p);
+
     cout<<"loading idle "<<p<<endl;
 
 }
@@ -179,7 +184,7 @@ void VideoPlayer::stopAndResetIntro(){
 //    introClip->setPosition(0);
     
     video=introClip;
-    startThread();
+  //  if(!isThreadRunning())startThread();
     
 }
 void VideoPlayer::stopAndResetIdle(){
@@ -187,7 +192,7 @@ void VideoPlayer::stopAndResetIdle(){
     idleClip->setPosition(0);
     */
     video=idleClip;
-    startThread();
+   // if(!isThreadRunning())startThread();
 }
 
 void VideoPlayer::stopAndReset(){
@@ -205,13 +210,13 @@ void VideoPlayer::showVideo(bool _showVideo){
 
 void VideoPlayer::threadedFunction(){
 
-    lock();
+   /* lock();
     video->setPaused(true);
     video->setFrame(0);
     unlock();
     
     stopThread();
-
+*/
     
 }
 
