@@ -78,9 +78,11 @@ void ofApp::setup(){
     thisvideo=videos[0];
     thisvideo->loadVideos();
     thisvideo->setState(INTRO);
+    
     nextvideo=videos[1];
     nextvideo->loadVideos();
     
+    nextDebounceTimer=ofGetElapsedTimeMillis();
     
     
 
@@ -224,6 +226,9 @@ void ofApp::draw(){
 
 
 void ofApp::next(){
+    
+    float now=ofGetElapsedTimeMillis();
+    if(nextDebounceTimer+nextDebounceDuration<now){
    // videos[videoIndex%videos.size()]->stopAndReset();
     
     
@@ -242,8 +247,10 @@ void ofApp::next(){
     thisvideo->setState(INTRO);
     nextvideo=videos[videoIndex%videos.size()];
     nextvideo->loadVideos();
+        
+        nextDebounceTimer=ofGetElapsedTimeMillis();
     
- 
+    }
     
 }
 /*

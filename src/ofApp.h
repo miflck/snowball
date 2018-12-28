@@ -76,5 +76,8 @@ private:
     DataManager datamanager;
     
     float imageFadeDuration=10;
+    
+    float nextDebounceTimer;
+    float nextDebounceDuration=1000;
 		
 };
