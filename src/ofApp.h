@@ -80,4 +80,14 @@ private:
     float nextDebounceTimer;
     float nextDebounceDuration=1000;
 		
+    ofSpherePrimitive sphere;
+    
+    int spinX=1;
+    ofImage texImage;
+    ofTexture  texture;
+    
+    ofTexture mTex;
+    ofEasyCam cam;
+
+    
 };

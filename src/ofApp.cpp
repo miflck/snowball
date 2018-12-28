@@ -10,6 +10,11 @@ void ofApp::setup(){
     Settings::get().load("data.json");
     mask.load("mask.png");
     
+    texImage.load("earth.jpg");
+    ofLoadImage(mTex,"earth.jpg");
+    texture=texImage.getTexture();
+    
+    
     boundingBoxPosition=&Settings::getVec2("boundingBoxPosition");
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
 
@@ -139,6 +144,10 @@ void ofApp::setup(){
     maxslider->setPosition(0, 250);
     maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
     
+    sphere.setRadius(300);
+    
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -220,6 +229,33 @@ void ofApp::draw(){
         minslider->draw();
         maxslider->draw();
     }
+    
+
+    
+    
+    
+    cam.begin();
+
+    ofDisableArbTex();
+    //sphere.setPosition(ofGetWidth()*.5, ofGetHeight()*.5, 0);
+   // ofTexture tex=thisvideo->introClip->getTextureReference();
+   // tex.bind();
+    sphere.rotate(spinX, 1.0, 0.0, 0.0);
+    sphere.rotate(spinX, 0.0, 1.0, 0.0);
+   // texImage.getTexture().bind();
+    mTex.bind();
+    
+
+    spinX+=0.1;
+    sphere.draw();
+    
+    mTex.unbind();
+
+  // tex.unbind();
+    ofEnableArbTex();
+    cam.end();
+    
+   // texImage.draw(0,0);
 }
 
 
@@ -230,7 +266,6 @@ void ofApp::next(){
     float now=ofGetElapsedTimeMillis();
     if(nextDebounceTimer+nextDebounceDuration<now){
    // videos[videoIndex%videos.size()]->stopAndReset();
-    
     
     // video index is for next video, so take old value for actual pic
     for(int i=0;i<particles.size();i++){
@@ -245,10 +280,11 @@ void ofApp::next(){
     
     thisvideo=nextvideo;
     thisvideo->setState(INTRO);
+        
     nextvideo=videos[videoIndex%videos.size()];
     nextvideo->loadVideos();
         
-        nextDebounceTimer=ofGetElapsedTimeMillis();
+    nextDebounceTimer=ofGetElapsedTimeMillis();
     
     }
     
@@ -274,7 +310,7 @@ void ofApp::debugNext(){
 
 void ofApp::shake(){
     
-    if(videos[videoIndex%videos.size()]->getState()==INTRO){
+    if(thisvideo->getState()==INTRO){
         for(int i=0;i<particles.size();i++){
             particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(10));
             particles[i].setDampingDuration(ofRandom(5,10));

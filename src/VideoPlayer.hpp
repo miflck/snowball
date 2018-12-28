@@ -58,14 +58,16 @@ void showVideo(bool _showVideo);
     void loadVideos();
     void closeVideos();
     
+    shared_ptr<Video> introClip;
+    shared_ptr<Video> idleClip;
+    shared_ptr<Video> video;
+    
 private:
     //shared_ptr<Video> movieclip;
     //vector<Video> videos;
     //vector<shared_ptr<Video> > videos;
     
-    shared_ptr<Video> introClip;
-    shared_ptr<Video> idleClip;
-    shared_ptr<Video> video;
+  
 
 
     bool rewind;
