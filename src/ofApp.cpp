@@ -5,18 +5,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
-
     ofBackground(0);
     ofSetVerticalSync(true);
     Settings::get().load("data.json");
     mask.load("mask.png");
-    
-    ofDisableArbTex();
-    texImage.load("earth.jpg");
-    ofLoadImage(mTex,"earth.jpg");
-    texture=texImage.getTexture();
-    
     
     boundingBoxPosition=&Settings::getVec2("boundingBoxPosition");
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
@@ -82,11 +74,7 @@ void ofApp::setup(){
     
    // videos[0]->setState(INTRO);
     
-
-    cout<<".................... "<<videos.size()<<endl;
     lastvideo=videos[videos.size()-1];
-    //lastvideo->loadVideos();
-
     thisvideo=videos[0];
     thisvideo->loadVideos();
     thisvideo->setState(INTRO);
@@ -151,10 +139,6 @@ void ofApp::setup(){
     maxslider->setPosition(0, 250);
     maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    //sphere.setRadius(300);
-    
-    
-    
 }
 
 //--------------------------------------------------------------
@@ -165,7 +149,7 @@ void ofApp::update(){
 
     
     for(int i=0;i<videos.size();i++){
-        //videos[i]->update();
+        videos[i]->update();
     }
     
     lastvideo->update();
@@ -198,7 +182,6 @@ void ofApp::draw(){
     thisvideo->draw();
     ofSetColor(255,0,0);
 
-    
     ofDrawLine(0, 0, 0, 1080);
 
   //  video->draw();
@@ -237,34 +220,6 @@ void ofApp::draw(){
         minslider->draw();
         maxslider->draw();
     }
-    
-
-    
-    
-    
-   /* cam.begin();
-
-    ofDisableArbTex();
-    //sphere.setPosition(ofGetWidth()*.5, ofGetHeight()*.5, 0);
-    ofTexture tex=thisvideo->introClip->getTextureReference();
-    //mTex.allocate(tex);
-   // tex.bind();
-    sphere.rotate(spinX, 1.0, 0.0, 0.0);
-    sphere.rotate(spinX, 0.0, 1.0, 0.0);
-   // texImage.getTexture().bind();
-    mTex.bind();
-    
-
-    spinX+=0.1;
-    sphere.draw();
-    
-    mTex.unbind();
-
-  // tex.unbind();
-    ofEnableArbTex();
-    cam.end();
-    
-   // texImage.draw(0,0);*/
 }
 
 
@@ -276,6 +231,7 @@ void ofApp::next(){
     if(nextDebounceTimer+nextDebounceDuration<now){
    // videos[videoIndex%videos.size()]->stopAndReset();
     
+    
     // video index is for next video, so take old value for actual pic
     for(int i=0;i<particles.size();i++){
         particles[i].setNewImage(&images[videoIndex%videos.size()],ofRandom(imageFadeDuration));
@@ -285,15 +241,17 @@ void ofApp::next(){
    // videos[videoIndex%videos.size()]->setState(INTRO);
     lastvideo=thisvideo;
     
+    lastvideo->setState(INIT);
     lastvideo->closeVideos();
-    
+
     thisvideo=nextvideo;
     thisvideo->setState(INTRO);
         
     nextvideo=videos[videoIndex%videos.size()];
     nextvideo->loadVideos();
-        
-    nextDebounceTimer=ofGetElapsedTimeMillis();
+        nextvideo->setState(INIT);
+
+        nextDebounceTimer=ofGetElapsedTimeMillis();
     
     }
     
