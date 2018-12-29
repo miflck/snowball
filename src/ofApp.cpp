@@ -6,9 +6,6 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    shared_ptr<VideoPlayer> lastvideo(new VideoPlayer);
-    shared_ptr<VideoPlayer> thisvideo(new VideoPlayer);
-    shared_ptr<VideoPlayer> nextvideo(new VideoPlayer);
 
     ofBackground(0);
     ofSetVerticalSync(true);
@@ -25,7 +22,7 @@ void ofApp::setup(){
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
 
     
-    string path = "movies";
+    string path = "movies_mov   ";
     ofDirectory dir(path);
     dir.listDir();
     //go through and print out all the paths
@@ -44,7 +41,7 @@ void ofApp::setup(){
 
                 // load movies
                // if(ext=="mov"){
-                    if(ext=="mp4"){
+                    if(ext=="mov"){
 
                     s=ofFilePath::removeExt(s);
                     vector<string> splitName = ofSplitString( s, "_");
@@ -86,8 +83,10 @@ void ofApp::setup(){
    // videos[0]->setState(INTRO);
     
 
-    
+    cout<<".................... "<<videos.size()<<endl;
     lastvideo=videos[videos.size()-1];
+    //lastvideo->loadVideos();
+
     thisvideo=videos[0];
     thisvideo->loadVideos();
     thisvideo->setState(INTRO);
@@ -152,7 +151,7 @@ void ofApp::setup(){
     maxslider->setPosition(0, 250);
     maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    sphere.setRadius(300);
+    //sphere.setRadius(300);
     
     
     
@@ -166,7 +165,7 @@ void ofApp::update(){
 
     
     for(int i=0;i<videos.size();i++){
-        videos[i]->update();
+        //videos[i]->update();
     }
     
     lastvideo->update();
@@ -199,6 +198,7 @@ void ofApp::draw(){
     thisvideo->draw();
     ofSetColor(255,0,0);
 
+    
     ofDrawLine(0, 0, 0, 1080);
 
   //  video->draw();

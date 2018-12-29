@@ -36,7 +36,7 @@ void VideoPlayer::setup(){
 void VideoPlayer::update(){
     
     
-
+    cout<<state<<endl;
     
     //bool isLoaded=true;
     
@@ -61,7 +61,7 @@ void VideoPlayer::update(){
     switch (state) {
      case INTRO:
             if(introClip->isLoaded()&!introClip->isPlaying()){
-                introClip->play();
+              //  introClip->play();
             }
 
      if(introClip->isLoaded()){
