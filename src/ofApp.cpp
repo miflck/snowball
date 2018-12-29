@@ -5,11 +5,17 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    shared_ptr<VideoPlayer> lastvideo(new VideoPlayer);
+    shared_ptr<VideoPlayer> thisvideo(new VideoPlayer);
+    shared_ptr<VideoPlayer> nextvideo(new VideoPlayer);
+
     ofBackground(0);
     ofSetVerticalSync(true);
     Settings::get().load("data.json");
     mask.load("mask.png");
     
+    ofDisableArbTex();
     texImage.load("earth.jpg");
     ofLoadImage(mTex,"earth.jpg");
     texture=texImage.getTexture();
@@ -78,6 +84,8 @@ void ofApp::setup(){
     
     
    // videos[0]->setState(INTRO);
+    
+
     
     lastvideo=videos[videos.size()-1];
     thisvideo=videos[0];
@@ -234,11 +242,12 @@ void ofApp::draw(){
     
     
     
-    cam.begin();
+   /* cam.begin();
 
     ofDisableArbTex();
     //sphere.setPosition(ofGetWidth()*.5, ofGetHeight()*.5, 0);
-   // ofTexture tex=thisvideo->introClip->getTextureReference();
+    ofTexture tex=thisvideo->introClip->getTextureReference();
+    //mTex.allocate(tex);
    // tex.bind();
     sphere.rotate(spinX, 1.0, 0.0, 0.0);
     sphere.rotate(spinX, 0.0, 1.0, 0.0);
@@ -255,7 +264,7 @@ void ofApp::draw(){
     ofEnableArbTex();
     cam.end();
     
-   // texImage.draw(0,0);
+   // texImage.draw(0,0);*/
 }
 
 
