@@ -22,7 +22,7 @@ void ofApp::setup(){
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
 
     
-    string path = "movies_mov   ";
+    string path = "movies_mov";
     ofDirectory dir(path);
     dir.listDir();
     //go through and print out all the paths
