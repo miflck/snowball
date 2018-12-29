@@ -14,7 +14,7 @@ void ofApp::setup(){
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
 
     
-    string path = "movies";
+    string path = "movies_mov";
     ofDirectory dir(path);
     dir.listDir();
     //go through and print out all the paths
@@ -33,7 +33,7 @@ void ofApp::setup(){
 
                 // load movies
                // if(ext=="mov"){
-                    if(ext=="mp4"){
+                    if(ext=="mov"){
 
                     s=ofFilePath::removeExt(s);
                     vector<string> splitName = ofSplitString( s, "_");
@@ -241,13 +241,16 @@ void ofApp::next(){
    // videos[videoIndex%videos.size()]->setState(INTRO);
     lastvideo=thisvideo;
     
+    lastvideo->setState(INIT);
     lastvideo->closeVideos();
-    
+
     thisvideo=nextvideo;
     thisvideo->setState(INTRO);
+        
     nextvideo=videos[videoIndex%videos.size()];
     nextvideo->loadVideos();
-        
+        nextvideo->setState(INIT);
+
         nextDebounceTimer=ofGetElapsedTimeMillis();
     
     }
@@ -274,7 +277,7 @@ void ofApp::debugNext(){
 
 void ofApp::shake(){
     
-    if(videos[videoIndex%videos.size()]->getState()==INTRO){
+    if(thisvideo->getState()==INTRO){
         for(int i=0;i<particles.size();i++){
             particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(10));
             particles[i].setDampingDuration(ofRandom(5,10));
