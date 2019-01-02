@@ -74,6 +74,7 @@ void showVideo(bool _showVideo);
 
 
     static ofEvent<bool> readyToPlay;
+    bool notified=false;
 
 private:
     //shared_ptr<Video> movieclip;

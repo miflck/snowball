@@ -95,7 +95,7 @@ private:
     ofVec2f *boundingBoxDimension;
 
     
-    bool bUseSerial=true;
+    bool bUseSerial=false;
     ofxSimpleSerial    serial;
     void        onNewMessage(string & message);
     string        message;
@@ -106,7 +106,7 @@ private:
     float imageFadeDuration=10;
     
     float nextDebounceTimer;
-    float nextDebounceDuration=100;
+    float nextDebounceDuration=500;
 		
     ofSpherePrimitive sphere;
     

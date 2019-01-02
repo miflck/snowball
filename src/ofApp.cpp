@@ -18,6 +18,8 @@ void ofApp::setup(){
     string path = "movies";
     ofDirectory dir(path);
     dir.listDir();
+    dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+
     //go through and print out all the paths
     for(int i = 0; i < dir.size(); i++){
         if(dir.getFile(i).isDirectory()==1){

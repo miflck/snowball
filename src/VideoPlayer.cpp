@@ -151,9 +151,13 @@ void VideoPlayer::draw(){
         switch (state) {
             
             case INTRO:
-                if(introClip->isLoaded() && introClip->getCurrentFrame()==1){
-                    bool b =true;
-                    ofNotifyEvent(readyToPlay,b);
+                if(introClip->isLoaded() && introClip->getCurrentFrame()>1){
+                    if(!notified){
+                        bool b =true;
+                        ofNotifyEvent(readyToPlay,b);
+                        notified=true;
+                        
+                    }
                 }
                // if(introClip->isLoaded() && introClip->getCurrentFrame()>0){
                     introClip->draw(0,0);
@@ -309,6 +313,7 @@ void VideoPlayer::loadVideos(){
     idleClip->loadAsync(idleClipPath);
     idleClip->setLoopState(OF_LOOP_NORMAL);
     loadSound();
+    notified=false;
 }
 void VideoPlayer::closeVideos(){
     cout<<"---------------close---------"<<endl;
