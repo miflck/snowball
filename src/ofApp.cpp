@@ -30,10 +30,9 @@ void ofApp::setup(){
                 
                 string s=ofFilePath::getFileName(newDir.getPath(i));
                 string ext = ofFilePath::getFileExt(s);
-
                 // load movies
                // if(ext=="mov"){
-                    if(ext=="mov"){
+                if(ext=="mov"){
 
                     s=ofFilePath::removeExt(s);
                     vector<string> splitName = ofSplitString( s, "_");
@@ -57,7 +56,8 @@ void ofApp::setup(){
                 }
                 
                 if(ext=="mp3"){
-
+                    cout<<"soundpath "<<ofFilePath::getAbsolutePath(newDir.getPath(i))<<endl;
+                    vp->setSoundpath(ofFilePath::getAbsolutePath(newDir.getPath(i)));
                 }
             }
             vp->setState(INIT);
@@ -144,12 +144,14 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
+     ofSoundUpdate();
+    
     minslider->update();
     maxslider->update();
 
     
     for(int i=0;i<videos.size();i++){
-        videos[i]->update();
+       //  videos[i]->update();
     }
     
     lastvideo->update();

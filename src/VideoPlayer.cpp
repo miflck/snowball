@@ -35,8 +35,7 @@ void VideoPlayer::setup(){
 
 void VideoPlayer::update(){
     
-    
-    cout<<state<<endl;
+   // cout<<"state "<<state<<endl;
     
     //bool isLoaded=true;
     
@@ -52,7 +51,7 @@ void VideoPlayer::update(){
         
         // ofSendMessage("intro CLIP is done");
         // introClip->setPosition(0);
-        cout<<"intro is done"<<endl;
+        //cout<<"intro is done"<<endl;
         setState(IDLE);
     }
     
@@ -61,11 +60,15 @@ void VideoPlayer::update(){
     switch (state) {
      case INTRO:
             if(introClip->isLoaded()&!introClip->isPlaying()){
-              //  introClip->play();
+                introClip->play();
             }
 
      if(introClip->isLoaded()){
-     introClip->update();
+         introClip->update();
+         if(getDuration()-(getDuration()*getPosition())<3 &! loopsound.isPlaying()){
+             startLoopsound();
+         }
+         cout<<getDuration()<<" "<<getPosition()<<" seconds "<<(getDuration()*getPosition())<<endl;
      }
      break;
      
@@ -113,6 +116,14 @@ void VideoPlayer::update(){
 }
 //--------------------------------------------------------------
 
+
+
+void VideoPlayer::startLoopsound(){
+    cout<<"++++++++++++++++++++++++++ start Loopsound++++++++++++++"<<endl;
+    loopsound.setLoop(true);
+    loopsound.play();
+    
+}
 
 void VideoPlayer::draw(){
     if(bShowVideo){
@@ -257,14 +268,13 @@ void VideoPlayer::threadedFunction(){
     
 }
 
+
 float VideoPlayer::getDuration(){
     if(getState()==IDLE){
         return idleClip->getDuration();
     }else if(getState()==INTRO){
         return introClip->getDuration();
-
     }
-    
 }
 
 float VideoPlayer::getPosition(){
@@ -279,9 +289,23 @@ float VideoPlayer::getPosition(){
     
 }
 
+
+
+void VideoPlayer::setSoundpath(string s){
+    soundpath=s;
+}
+
+void VideoPlayer::loadSound(){
+    loopsound.load(soundpath);
+   //9 loopsound.play();
+    //loopsound.setVolume(0.75f);
+
+}
+
 void VideoPlayer::loadVideos(){
     introClip->loadAsync(introClipPath);
     idleClip->loadAsync(idleClipPath);
+    loadSound();
 }
 void VideoPlayer::closeVideos(){
     cout<<"---------------close---------"<<endl;
@@ -289,4 +313,6 @@ void VideoPlayer::closeVideos(){
     introClip->close();
     idleClip->setPaused(true);
     idleClip->close();
+    loopsound.stop();
+    loopsound.unload();
 }

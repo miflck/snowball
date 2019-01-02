@@ -56,6 +56,7 @@ class ofApp : public ofBaseApp{
     void onSliderEvent(ofxDatGuiSliderEvent e);
     bool bShowGui=false;
     
+    
 private:
     int videoIndex=0;
     
@@ -78,7 +79,7 @@ private:
     float imageFadeDuration=10;
     
     float nextDebounceTimer;
-    float nextDebounceDuration=1000;
+    float nextDebounceDuration=100;
 		
     ofSpherePrimitive sphere;
     

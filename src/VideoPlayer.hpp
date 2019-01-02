@@ -62,6 +62,14 @@ void showVideo(bool _showVideo);
     shared_ptr<Video> idleClip;
     shared_ptr<Video> video;
     
+    
+    ofSoundPlayer  loopsound;
+    string soundpath;
+    void setSoundpath(string s);
+    void loadSound();
+    void startLoopsound();
+
+    
 private:
     //shared_ptr<Video> movieclip;
     //vector<Video> videos;
@@ -78,5 +86,8 @@ private:
     bool bIsVideoLoaded;
     bool bShowVideo=false;
 
+    
+    
+    
 };
 #endif /* VideoPlayer_hpp */
