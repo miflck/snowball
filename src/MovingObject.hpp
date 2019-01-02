@@ -202,8 +202,8 @@ private:
     ofRectangle boundingBox;
     
     
-    float rotationspeed;
-    float actualRotation;
+    float rotationspeed=0;
+    float actualRotation=0;
     
     float maxLandingSpeed=3;
     

@@ -32,8 +32,10 @@ void MovingObject::setup(){
     wanderforce=10;
     
     
-    groundOffset=ofRandom(0,30);
+    groundOffset=ofRandom(0,60);
     bHasReached=false;
+    
+    actualRotation=0;
 }
 
 void MovingObject::update(){
@@ -44,7 +46,6 @@ void MovingObject::update(){
     if(!bHasReached){
         actualRotation+=rotationspeed;
     }
-    
     
     move();
     
@@ -64,7 +65,6 @@ void MovingObject::update(){
     actualRotationSpeed = ofxeasing::map_clamp(now, rotationInitTime, rotationEndTime, rotationInit, rotationTarget, &ofxeasing::linear::easeNone);
     
     rotationspeed=actualRotationSpeed;
-    
     
     
     

@@ -43,6 +43,9 @@ class ofApp : public ofBaseApp{
     void debugNext();
     
     void shake();
+    
+    void shake(ofVec3f v);
+
 
     
     
@@ -50,8 +53,16 @@ class ofApp : public ofBaseApp{
     
     bool bShowMask=true;
     
+    
+    
+    ofxDatGui* gui;
+
     ofxDatGuiSlider* minslider;
     ofxDatGuiSlider* maxslider;
+    
+    
+    ofxDatGuiValuePlotter* zPlotter; 
+    
 
     void onSliderEvent(ofxDatGuiSliderEvent e);
     bool bShowGui=false;
@@ -68,7 +79,7 @@ private:
     ofVec2f *boundingBoxDimension;
 
     
-    bool bUseSerial=false;
+    bool bUseSerial=true;
     ofxSimpleSerial    serial;
     void        onNewMessage(string & message);
     string        message;
@@ -89,6 +100,9 @@ private:
     
     ofTexture mTex;
     ofEasyCam cam;
+    
+    void onMaxPeak(ofVec3f & e);
+
 
     
 };

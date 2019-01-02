@@ -47,7 +47,7 @@ void VideoPlayer::update(){
     
     
     // if(introClip->getIsMovieDone() && introClip->isPlaying()){
-    if(introClip->getIsMovieDone()){
+    if(state == INTRO && introClip->getIsMovieDone()){
         
         // ofSendMessage("intro CLIP is done");
         // introClip->setPosition(0);
@@ -68,7 +68,7 @@ void VideoPlayer::update(){
          if(getDuration()-(getDuration()*getPosition())<3 &! loopsound.isPlaying()){
              startLoopsound();
          }
-         cout<<getDuration()<<" "<<getPosition()<<" seconds "<<(getDuration()*getPosition())<<endl;
+      //   cout<<getDuration()<<" "<<getPosition()<<" seconds "<<(getDuration()*getPosition())<<endl;
      }
      break;
      
@@ -305,6 +305,7 @@ void VideoPlayer::loadSound(){
 void VideoPlayer::loadVideos(){
     introClip->loadAsync(introClipPath);
     idleClip->loadAsync(idleClipPath);
+    idleClip->setLoopState(OF_LOOP_NORMAL);
     loadSound();
 }
 void VideoPlayer::closeVideos(){

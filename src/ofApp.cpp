@@ -14,7 +14,7 @@ void ofApp::setup(){
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
 
     
-    string path = "movies_mov";
+    string path = "movies";
     ofDirectory dir(path);
     dir.listDir();
     //go through and print out all the paths
@@ -32,7 +32,7 @@ void ofApp::setup(){
                 string ext = ofFilePath::getFileExt(s);
                 // load movies
                // if(ext=="mov"){
-                if(ext=="mov"){
+                if(ext=="mp4"){
 
                     s=ofFilePath::removeExt(s);
                     vector<string> splitName = ofSplitString( s, "_");
@@ -55,7 +55,7 @@ void ofApp::setup(){
                     vp->img=&img;
                 }
                 
-                if(ext=="mp3"){
+                if(ext=="aif"){
                     cout<<"soundpath "<<ofFilePath::getAbsolutePath(newDir.getPath(i))<<endl;
                     vp->setSoundpath(ofFilePath::getAbsolutePath(newDir.getPath(i)));
                 }
@@ -81,15 +81,16 @@ void ofApp::setup(){
     
     nextvideo=videos[1];
     nextvideo->loadVideos();
-    
+    nextvideo->setState(INIT);
+
     nextDebounceTimer=ofGetElapsedTimeMillis();
     
     
-
+    videoIndex=1;
 
 
     
-    for(int i=0;i<1000;i++){
+    for(int i=0;i<1500;i++){
         MovingObject o;
         o.setImage(&images[0]);
         o.setNewImage(&images[0],ofRandom(2));
@@ -102,7 +103,7 @@ void ofApp::setup(){
         //o.setSpeed(1,1);
         //o.setWanderForce(1);
         o.setGravity(true);
-        o.setGravityForce(ofVec2f(0,00.02));
+        o.setGravityForce(ofVec2f(0,00.03));
         o.addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(20,50));
         o.setBoundingBox(ofRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y));
         o.addRotation(ofRandom(-1,1)*2);
@@ -128,7 +129,12 @@ void ofApp::setup(){
     }
     
     
-    
+    gui = new ofxDatGui();
+    gui->setWidth(1200, .2);
+    gui->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    gui->addHeader("wave monitor & value plotter example");
+    gui->addFooter();
+
     minslider = new ofxDatGuiSlider("MIN", 0, 1000, 20);
     minslider->setWidth(600, .2); // make label area 20% of width //
     minslider->setPosition(0, 200);
@@ -139,6 +145,12 @@ void ofApp::setup(){
     maxslider->setPosition(0, 250);
     maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
     
+    zPlotter = gui->addValuePlotter("zPlotter", 0, 1000);
+    
+    
+    ofAddListener(DataManager::maxPeak , this, &ofApp::onMaxPeak);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
+
+
 }
 
 //--------------------------------------------------------------
@@ -167,9 +179,9 @@ void ofApp::update(){
     }
 
     
-    
-    if(bUseSerial)cout<<datamanager.getFloatAverage()<<endl;
-    
+    //if(bUseSerial)cout<<datamanager.getFloatAverage()<<endl;
+    zPlotter->setValue(datamanager.getzAverage());
+    //cout<<datamanager.getzAverage()<<endl;
 }
 
 //--------------------------------------------------------------
@@ -221,6 +233,7 @@ void ofApp::draw(){
     if(bShowGui){
         minslider->draw();
         maxslider->draw();
+       // zPlotter->draw();
     }
 }
 
@@ -244,17 +257,20 @@ void ofApp::next(){
     lastvideo=thisvideo;
     
     lastvideo->setState(INIT);
-    lastvideo->closeVideos();
-
     thisvideo=nextvideo;
     thisvideo->setState(INTRO);
         
+        
+
+
+        
     nextvideo=videos[videoIndex%videos.size()];
     nextvideo->loadVideos();
-        nextvideo->setState(INIT);
+    nextvideo->setState(INIT);
 
-        nextDebounceTimer=ofGetElapsedTimeMillis();
-    
+    nextDebounceTimer=ofGetElapsedTimeMillis();
+    lastvideo->closeVideos();
+
     }
     
 }
@@ -296,6 +312,31 @@ void ofApp::shake(){
     }
     
 }
+
+
+
+void ofApp::shake(ofVec3f v){
+    
+    if(thisvideo->getState()==INTRO){
+        for(int i=0;i<particles.size();i++){
+           // particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),v.z);
+            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(10));
+
+            particles[i].setDampingDuration(ofRandom(5,10));
+            particles[i].addRotation(ofRandom(-1,1)*10);
+        }
+    }else{
+        for(int i=0;i<particles.size();i++){
+            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),v.z);
+            particles[i].addRotation(ofRandom(-1,1)*2);
+            particles[i].setDampingDuration(ofRandom(5,10));
+            
+        }
+        next();
+    }
+    
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -430,11 +471,14 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e)
 void ofApp::onNewMessage(string & message)
 {
    // cout << "onNewMessage, message: " << message << "\n";
-   string firstWord= ofSplitString(message, ",")[0];
+    if(ofSplitString(message, ",").size()>2){
+   string x= ofSplitString(message, ",")[0];
+    string y= ofSplitString(message, ",")[1];
+    string z= ofSplitString(message, ",")[2];
+
     
     
-    
-    
+    /*
     if(videos[videoIndex%videos.size()]->getState()==INTRO){
         
         
@@ -458,14 +502,26 @@ void ofApp::onNewMessage(string & message)
         next();
     }
     
+    */
     
     
     
     
     
+    datamanager.addxValue(ofToFloat(x));
+    datamanager.addyValue(ofToFloat(y));
+    datamanager.addzValue(ofToFloat(z));
+        
+        datamanager.update();
+
+}
+}
+
+void ofApp::onMaxPeak(ofVec3f &e){
+    ofVec3f v=ofVec3f(datamanager.getLatestMaximals());
     
+    cout<<"+++++++++++++++++ PEAK "<<e<<" "<<v<<endl;
+
     
-  
-    datamanager.addFloatValue(ofToFloat(firstWord));
-    
+    shake(v);
 }
