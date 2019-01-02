@@ -64,10 +64,26 @@ class ofApp : public ofBaseApp{
     ofxDatGuiValuePlotter* zPlotter; 
     
 
-    void onSliderEvent(ofxDatGuiSliderEvent e);
+    //void onSliderEvent(ofxDatGuiSliderEvent e);
+    
+    void onGuiSliderEvent(ofxDatGuiSliderEvent e);
+
+    
     bool bShowGui=false;
     
     
+    float scale=1;
+
+
+    
+    //float scale=1;
+    ofxDatGuiSlider* zoom;
+
+    bool changing=false;
+    bool doChange=false;
+    
+    void prepareNext();
+
 private:
     int videoIndex=0;
     
@@ -102,6 +118,7 @@ private:
     ofEasyCam cam;
     
     void onMaxPeak(ofVec3f & e);
+    void onReady(bool & e);
 
 
     

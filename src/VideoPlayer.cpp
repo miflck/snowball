@@ -7,6 +7,8 @@
 
 #include "VideoPlayer.hpp"
 
+ofEvent<bool> VideoPlayer::readyToPlay = ofEvent<bool>();
+
 VideoPlayer::VideoPlayer(){
     
     shared_ptr<Video> a(new Video);
@@ -45,6 +47,15 @@ void VideoPlayer::update(){
       //  idleClip->update();//}
     
     
+    if(introClip->isLoaded()){
+      //  introClip->update();
+        
+    }
+    
+   /* if(idleClip->isLoaded()){
+        idleClip->update();
+        
+    }*/
     
     // if(introClip->getIsMovieDone() && introClip->isPlaying()){
     if(state == INTRO && introClip->getIsMovieDone()){
@@ -65,6 +76,16 @@ void VideoPlayer::update(){
 
      if(introClip->isLoaded()){
          introClip->update();
+         
+         
+         float videoLength = introClip->getDuration();
+         float videoElapsedTime = introClip->getPosition()*introClip->getDuration();
+         float videoTimeRemaining = videoLength - videoElapsedTime;
+         float fadeTime = 1;
+         if(videoTimeRemaining < fadeTime){ //if it is time to fade
+             introClip->setVolume(1 * videoTimeRemaining / fadeTime);
+         }
+         
          if(getDuration()-(getDuration()*getPosition())<3 &! loopsound.isPlaying()){
              startLoopsound();
          }
@@ -130,9 +151,13 @@ void VideoPlayer::draw(){
         switch (state) {
             
             case INTRO:
-                if(introClip->isLoaded()){
-                    introClip->draw(0,0);
+                if(introClip->isLoaded() && introClip->getCurrentFrame()==1){
+                    bool b =true;
+                    ofNotifyEvent(readyToPlay,b);
                 }
+               // if(introClip->isLoaded() && introClip->getCurrentFrame()>0){
+                    introClip->draw(0,0);
+               // }
                 break;
                 
             case IDLE:
@@ -172,35 +197,12 @@ void VideoPlayer::setState(int _state){
     switch (state) {
         case INTRO:
             if(introClip->isLoaded()){
-               // idleClip->setPaused(true);
-              // introClip->firstFrame();
-                //introClip->setFrame(0);
-             
-               /* if(!isThreadRunning()){
-                    startThread(idleClip);
-                }*/
-                
-                //stopAndResetIdle();
-               // idleClip->setFrame(0);
                 introClip->play();
             }
             break;
             
         case IDLE:
             if(idleClip->isLoaded()){
-              //  stopAndResetIntro();
-             //  introClip->setPaused(true);
-             //  idleClip->firstFrame();
-             //   idleClip->stop();
-
-//                idleClip->setFrame(0);
-
-               /* if(!isThreadRunning()){
-                    startThread(introClip);
-                }*/
-               // introClip->setFrame(0);
-                
-                
                 idleClip->play();
             }
             break;

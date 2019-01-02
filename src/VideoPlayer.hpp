@@ -20,6 +20,8 @@
 class VideoPlayer: public ofBaseApp, ofThread{
 
 public:
+    
+
 VideoPlayer();
 virtual ~VideoPlayer();
 
@@ -68,8 +70,11 @@ void showVideo(bool _showVideo);
     void setSoundpath(string s);
     void loadSound();
     void startLoopsound();
-
     
+
+
+    static ofEvent<bool> readyToPlay;
+
 private:
     //shared_ptr<Video> movieclip;
     //vector<Video> videos;

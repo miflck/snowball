@@ -6,12 +6,13 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(0);
-    ofSetVerticalSync(true);
+    ofSetVerticalSync(false);
     Settings::get().load("data.json");
     mask.load("mask.png");
     
     boundingBoxPosition=&Settings::getVec2("boundingBoxPosition");
     boundingBoxDimension=&Settings::getVec2("boundingBoxDimension");
+   // scale=&Settings::getFloat("Scale");
 
     
     string path = "movies";
@@ -138,18 +139,27 @@ void ofApp::setup(){
     minslider = new ofxDatGuiSlider("MIN", 0, 1000, 20);
     minslider->setWidth(600, .2); // make label area 20% of width //
     minslider->setPosition(0, 200);
-    minslider->onSliderEvent(this, &ofApp::onSliderEvent);
+   // minslider->onSliderEvent(this, &ofApp::onSliderEvent);
  
     maxslider = new ofxDatGuiSlider("MAX", 0, 1000, 20);
     maxslider->setWidth(600, .2); // make label area 20% of width //
     maxslider->setPosition(0, 250);
-    maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
+    //maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
     
     zPlotter = gui->addValuePlotter("zPlotter", 0, 1000);
+    gui->addBreak()->setHeight(20);
+    zoom=gui->addSlider("zoom", 0.5, 1);
     
+    
+    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
+
+    
+   // gui->setAutoDraw(false);
+
     
     ofAddListener(DataManager::maxPeak , this, &ofApp::onMaxPeak);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
 
+    ofAddListener(VideoPlayer::readyToPlay , this, &ofApp::onReady);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
 
 }
 
@@ -182,6 +192,16 @@ void ofApp::update(){
     //if(bUseSerial)cout<<datamanager.getFloatAverage()<<endl;
     zPlotter->setValue(datamanager.getzAverage());
     //cout<<datamanager.getzAverage()<<endl;
+    
+    if(doChange){
+        next();
+      //  lastvideo->update();
+      //  thisvideo->update();
+      //  nextvideo->update();
+    }
+    
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -190,20 +210,22 @@ void ofApp::draw(){
     ofPushStyle();
    // ofTranslate(1920, 0);
     ofTranslate(0, 0);
-
-    // ofScale(0.5,0.5);
-     //videos[videoIndex%videos.size()]->draw();
+    if(debug){
+        ofSetColor(255,0,0);
+        ofDrawLine(0, 0, 0, 1080);
+        ofSetColor(255);
+    }
+    ofTranslate(1920/2, 1080);
+    ofScale(scale,scale);
+    ofTranslate(-1920/2, -1080);
+    
     thisvideo->draw();
-    ofSetColor(255,0,0);
+    lastvideo->draw();
 
-    ofDrawLine(0, 0, 0, 1080);
-
-  //  video->draw();
     ofPopStyle();
     ofPopMatrix();
     
-    //ofEnableBlendMode(OF_BLENDMODE_SCREEN);
-   // ofEnableAlphaBlending();
+
     
     
     
@@ -216,10 +238,7 @@ void ofApp::draw(){
    if(bShowMask)mask.draw(0,0);
    // ofDrawRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y);
     if(debug){
-        //cout<<videos[videoIndex%videos.size()]->getPosition()<<endl;
-        //float w=ofMap(videos[videoIndex%videos.size()]->getPosition(),0,1,0,1080);
-        float w=ofMap(thisvideo->getPosition(),0,1,0,1080);
-
+        float w=ofMap(thisvideo->getPosition(),0,1,0,1920);
         ofPushStyle();
         ofFill();
         ofSetColor(255,0,0);
@@ -233,14 +252,23 @@ void ofApp::draw(){
     if(bShowGui){
         minslider->draw();
         maxslider->draw();
+      //  gui->draw();
        // zPlotter->draw();
+    }
+    
+    
+    if(doChange){
+        doChange=false;
     }
 }
 
 
 
-
+void ofApp::prepareNext(){
+    doChange=true;
+}
 void ofApp::next(){
+    
     
     float now=ofGetElapsedTimeMillis();
     if(nextDebounceTimer+nextDebounceDuration<now){
@@ -255,8 +283,7 @@ void ofApp::next(){
     videoIndex++;
    // videos[videoIndex%videos.size()]->setState(INTRO);
     lastvideo=thisvideo;
-    
-    lastvideo->setState(INIT);
+    //lastvideo->setState(INIT);
     thisvideo=nextvideo;
     thisvideo->setState(INTRO);
         
@@ -269,7 +296,6 @@ void ofApp::next(){
     nextvideo->setState(INIT);
 
     nextDebounceTimer=ofGetElapsedTimeMillis();
-    lastvideo->closeVideos();
 
     }
     
@@ -308,7 +334,8 @@ void ofApp::shake(){
             particles[i].setDampingDuration(ofRandom(5,10));
 
         }
-        next();
+        //next();
+        prepareNext();
     }
     
 }
@@ -332,7 +359,8 @@ void ofApp::shake(ofVec3f v){
             particles[i].setDampingDuration(ofRandom(5,10));
             
         }
-        next();
+        //next();
+        prepareNext();
     }
     
 }
@@ -347,7 +375,8 @@ void ofApp::keyPressed(int key){
     }
     
     if(key =='n'){
-        next();
+       // next();
+        prepareNext();
     }
     
     if(key =='N'){
@@ -453,14 +482,23 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 
-void ofApp::onSliderEvent(ofxDatGuiSliderEvent e)
+void ofApp::onGuiSliderEvent(ofxDatGuiSliderEvent e)
 {
+    
+    
     if(e.target == minslider){
         ofSetBackgroundColor(ofColor::white*e.scale);
         cout << e.target->getLabel() << " value = "; e.target->printValue();
     }   else if (e.target == maxslider){
         cout << e.target->getLabel() << " value = "; e.target->printValue();
-    }  /* else if (e.target == sliderFloat){
+    }  else if (e.target == zoom){
+        scale=zoom->getValue();
+
+        cout << e.target->getLabel() << " value = "; e.target->printValue();
+    }
+    
+    
+    /* else if (e.target == sliderFloat){
         cout << e.target->getLabel() << " value = "; e.target->printValue();
     }*/
 }
@@ -515,6 +553,12 @@ void ofApp::onNewMessage(string & message)
         datamanager.update();
 
 }
+}
+
+
+void ofApp::onReady(bool &e){
+    lastvideo->setState(INIT);
+    lastvideo->closeVideos();
 }
 
 void ofApp::onMaxPeak(ofVec3f &e){
