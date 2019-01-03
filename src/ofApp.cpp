@@ -162,7 +162,7 @@ void ofApp::setup(){
     ofAddListener(DataManager::maxPeak , this, &ofApp::onMaxPeak);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
 
     ofAddListener(VideoPlayer::readyToPlay , this, &ofApp::onReady);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
-
+    ofAddListener(VideoPlayer::timeOut , this, &ofApp::onTimeOut);
 }
 
 //--------------------------------------------------------------
@@ -336,8 +336,8 @@ void ofApp::shake(){
             particles[i].setDampingDuration(ofRandom(5,10));
 
         }
-        //next();
-        prepareNext();
+        next();
+        //prepareNext();
     }
     
 }
@@ -565,9 +565,11 @@ void ofApp::onReady(bool &e){
 
 void ofApp::onMaxPeak(ofVec3f &e){
     ofVec3f v=ofVec3f(datamanager.getLatestMaximals());
-    
-    cout<<"+++++++++++++++++ PEAK "<<e<<" "<<v<<endl;
-
-    
+   // cout<<"+++++++++++++++++ PEAK "<<e<<" "<<v<<endl;
     shake(v);
+}
+
+void ofApp::onTimeOut(bool & e){
+    cout<<"+++++++++++++++++ Time Out "<<e<<endl;
+    shake();
 }

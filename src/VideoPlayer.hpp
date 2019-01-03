@@ -75,6 +75,8 @@ void showVideo(bool _showVideo);
 
     static ofEvent<bool> readyToPlay;
     bool notified=false;
+    static ofEvent<bool> timeOut;
+
 
 private:
     //shared_ptr<Video> movieclip;
@@ -91,6 +93,10 @@ private:
     
     bool bIsVideoLoaded;
     bool bShowVideo=false;
+    
+    float loopInitTime;
+    float loopMaxDuration=1000*60*3;
+    bool bTimeOut=false;
 
     
     

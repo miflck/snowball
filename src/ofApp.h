@@ -119,6 +119,7 @@ private:
     
     void onMaxPeak(ofVec3f & e);
     void onReady(bool & e);
+    void onTimeOut(bool & e);
 
 
     

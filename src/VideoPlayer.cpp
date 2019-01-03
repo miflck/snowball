@@ -8,6 +8,7 @@
 #include "VideoPlayer.hpp"
 
 ofEvent<bool> VideoPlayer::readyToPlay = ofEvent<bool>();
+ofEvent<bool> VideoPlayer::timeOut = ofEvent<bool>();
 
 VideoPlayer::VideoPlayer(){
     
@@ -94,12 +95,18 @@ void VideoPlayer::update(){
      break;
      
      case IDLE:
-     if(idleClip->isLoaded()){
-     idleClip->update();
-     
-     }
-     
-     break;
+            
+           // cout<<"Time "<<loopInitTime+loopMaxDuration<<" "<<ofGetElapsedTimeMillis()<<endl;
+            if((loopInitTime+loopMaxDuration)<ofGetElapsedTimeMillis()){
+                bool t=true;
+                if(!bTimeOut)ofNotifyEvent(timeOut, t);
+                bTimeOut=true;
+            }
+            if(idleClip->isLoaded()){
+                idleClip->update();
+            }
+        
+        break;
      
      default:
      break;
@@ -209,6 +216,8 @@ void VideoPlayer::setState(int _state){
             if(idleClip->isLoaded()){
                 idleClip->play();
             }
+            bTimeOut=false;
+            loopInitTime=ofGetElapsedTimeMillis();
             break;
             
         default:
