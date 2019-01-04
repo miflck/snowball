@@ -281,6 +281,22 @@ void VideoPlayer::threadedFunction(){
     stopThread();
 */
     
+    cout<<"---------------close---------"<<endl;
+    introClip->setPaused(true);
+    introClip->close();
+    idleClip->setPaused(true);
+    idleClip->close();
+    loopsound.stop();
+    loopsound.unload();
+    
+    shared_ptr<Video> a(new Video);
+    introClip=a;
+    shared_ptr<Video> b(new Video);
+    idleClip=b;
+    
+    
+    stopThread();
+    
 }
 
 
@@ -295,15 +311,10 @@ float VideoPlayer::getDuration(){
 float VideoPlayer::getPosition(){
     if(getState()==IDLE){
         return  idleClip->getPosition();
-        
     }else if(getState()==INTRO){
         return  introClip->getPosition();
-
     }
-    
-    
 }
-
 
 
 void VideoPlayer::setSoundpath(string s){
@@ -314,7 +325,6 @@ void VideoPlayer::loadSound(){
     loopsound.load(soundpath);
    //9 loopsound.play();
     //loopsound.setVolume(0.75f);
-
 }
 
 void VideoPlayer::loadVideos(){
@@ -325,11 +335,13 @@ void VideoPlayer::loadVideos(){
     notified=false;
 }
 void VideoPlayer::closeVideos(){
-    cout<<"---------------close---------"<<endl;
+    
+    startThread();
+/*    cout<<"---------------close---------"<<endl;
     introClip->setPaused(true);
     introClip->close();
     idleClip->setPaused(true);
     idleClip->close();
     loopsound.stop();
-    loopsound.unload();
+    loopsound.unload();*/
 }

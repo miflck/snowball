@@ -48,12 +48,13 @@ private:
     
 
     vector<float> floatValues;
-    int maxFloatValues=10;
+    int maxFloatValues=5    ;
 
     vector<float> xValues;
     vector<float> yValues;
     vector<float> zValues;
 
+    int peakDiff=150;
     
     
 };

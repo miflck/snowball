@@ -95,7 +95,7 @@ private:
     ofVec2f *boundingBoxDimension;
 
     
-    bool bUseSerial=false;
+    bool bUseSerial=true;
     ofxSimpleSerial    serial;
     void        onNewMessage(string & message);
     string        message;
@@ -120,6 +120,12 @@ private:
     void onMaxPeak(ofVec3f & e);
     void onReady(bool & e);
     void onTimeOut(bool & e);
+    
+    
+    ofSoundPlayer shakesound;
+    vector <ofSoundPlayer > shakesounds;
+    int initShakeDebounce;
+    int shakeDebounceDuration=500;
 
 
     

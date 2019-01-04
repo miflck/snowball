@@ -148,7 +148,7 @@ void ofApp::setup(){
     maxslider->setPosition(0, 250);
     //maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    zPlotter = gui->addValuePlotter("zPlotter", 0, 1000);
+    zPlotter = gui->addValuePlotter("zPlotter", 300, 500);
     gui->addBreak()->setHeight(20);
     zoom=gui->addSlider("zoom", 0.5, 1);
     
@@ -163,6 +163,20 @@ void ofApp::setup(){
 
     ofAddListener(VideoPlayer::readyToPlay , this, &ofApp::onReady);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
     ofAddListener(VideoPlayer::timeOut , this, &ofApp::onTimeOut);
+    
+    
+    
+    for(int i=1;i<8;i++){
+        ofSoundPlayer s;
+        s.load("sounds/shake"+ofToString(i)+".aif");
+        s.setMultiPlay(true);
+        shakesounds.push_back(s);
+    }
+ 
+    shakesound.load("sounds/shake3.aif");
+    shakesound.setMultiPlay(true);
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -322,6 +336,9 @@ void ofApp::debugNext(){
 
 
 void ofApp::shake(){
+    int rand=round(ofRandom(shakesounds.size()-1));
+    cout<<rand<<endl;
+    shakesounds[rand].play();
     
     if(thisvideo->getState()==INTRO){
         for(int i=0;i<particles.size();i++){
@@ -345,7 +362,13 @@ void ofApp::shake(){
 
 
 void ofApp::shake(ofVec3f v){
-    
+   // shakesound.play();
+    if(initShakeDebounce+shakeDebounceDuration<ofGetElapsedTimeMillis()){
+    int rand=round(ofRandom(shakesounds.size()-1));
+    cout<<rand<<endl;
+    shakesounds[rand].play();
+        initShakeDebounce=ofGetElapsedTimeMillis();
+    }
     if(thisvideo->getState()==INTRO){
         for(int i=0;i<particles.size();i++){
            // particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),v.z);
@@ -361,8 +384,8 @@ void ofApp::shake(ofVec3f v){
             particles[i].setDampingDuration(ofRandom(5,10));
             
         }
-        //next();
-        prepareNext();
+        next();
+        //prepareNext();
     }
     
 }
