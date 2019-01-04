@@ -108,24 +108,21 @@ private:
     float nextDebounceTimer;
     float nextDebounceDuration=500;
 		
-    ofSpherePrimitive sphere;
-    
-    int spinX=1;
-    ofImage texImage;
-    ofTexture  texture;
-    
-    ofTexture mTex;
-    ofEasyCam cam;
+
     
     void onMaxPeak(ofVec3f & e);
     void onReady(bool & e);
     void onTimeOut(bool & e);
     
     
-    ofSoundPlayer shakesound;
     vector <ofSoundPlayer > shakesounds;
     int initShakeDebounce;
-    int shakeDebounceDuration=500;
+    int shakeDebounceDuration=800;
+    
+    float shakeEnergy;
+    float shakeDamping=0.99;
+    
+    int nextThreshold=600;
 
 
     

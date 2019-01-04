@@ -6,7 +6,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(0);
-    ofSetVerticalSync(false);
+    ofSetVerticalSync(true);
     Settings::get().load("data.json");
     mask.load("mask.png");
     
@@ -156,7 +156,7 @@ void ofApp::setup(){
     gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
 
     
-   // gui->setAutoDraw(false);
+    gui->setAutoDraw(false);
 
     
     ofAddListener(DataManager::maxPeak , this, &ofApp::onMaxPeak);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
@@ -173,8 +173,7 @@ void ofApp::setup(){
         shakesounds.push_back(s);
     }
  
-    shakesound.load("sounds/shake3.aif");
-    shakesound.setMultiPlay(true);
+
     
     
 }
@@ -260,6 +259,15 @@ void ofApp::draw(){
         ofSetColor(255,0,0);
         ofDrawRectangle(0, 0,w, 50);
         ofPopStyle();
+        
+
+        ofPushStyle();
+        ofFill();
+        ofSetColor(255,255,0);
+        ofDrawRectangle(0, 50,shakeEnergy, 50);
+        ofPopStyle();
+        
+        
     }
     
     
@@ -276,6 +284,9 @@ void ofApp::draw(){
     if(doChange){
         doChange=false;
     }
+    
+    shakeEnergy*=shakeDamping;
+    if(shakeEnergy<=0)shakeEnergy=0;
 }
 
 
@@ -336,9 +347,11 @@ void ofApp::debugNext(){
 
 
 void ofApp::shake(){
-    int rand=round(ofRandom(shakesounds.size()-1));
-    cout<<rand<<endl;
-    shakesounds[rand].play();
+    if(initShakeDebounce+shakeDebounceDuration<ofGetElapsedTimeMillis()){
+        int rand=round(ofRandom(shakesounds.size()-1));
+        shakesounds[rand].play();
+        initShakeDebounce=ofGetElapsedTimeMillis();
+    }
     
     if(thisvideo->getState()==INTRO){
         for(int i=0;i<particles.size();i++){
@@ -362,20 +375,29 @@ void ofApp::shake(){
 
 
 void ofApp::shake(ofVec3f v){
-   // shakesound.play();
     if(initShakeDebounce+shakeDebounceDuration<ofGetElapsedTimeMillis()){
     int rand=round(ofRandom(shakesounds.size()-1));
-    cout<<rand<<endl;
     shakesounds[rand].play();
         initShakeDebounce=ofGetElapsedTimeMillis();
     }
+    
+    shakeEnergy+=v.y;
+    
+    
     if(thisvideo->getState()==INTRO){
         for(int i=0;i<particles.size();i++){
-           // particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),v.z);
-            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(10));
+            float f=ofMap(shakeEnergy, 0, 1500, 0, 10,true);
+           // cout<<"Energy "<<shakeEnergy<<" "<<f<<endl;
 
-            particles[i].setDampingDuration(ofRandom(5,10));
-            particles[i].addRotation(ofRandom(-1,1)*10);
+           // particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),v.z);
+            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(f/2,f));
+
+            //particles[i].setDampingDuration(ofRandom(5,10));
+            particles[i].setDampingDuration(ofRandom(f/2,f));
+            particles[i].setDampingDuration(ofRandom(f/2,f));
+
+
+            particles[i].addRotation(ofRandom(-1,1)*f);
         }
     }else{
         for(int i=0;i<particles.size();i++){
@@ -384,7 +406,10 @@ void ofApp::shake(ofVec3f v){
             particles[i].setDampingDuration(ofRandom(5,10));
             
         }
-        next();
+        if(shakeEnergy>nextThreshold){
+            next();
+            
+        }
         //prepareNext();
     }
     
