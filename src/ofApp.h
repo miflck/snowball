@@ -124,6 +124,8 @@ private:
     
     int nextThreshold=600;
 
+    ofxDatGuiFRM* fps;
+
 
     
 };

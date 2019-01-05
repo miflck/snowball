@@ -167,7 +167,9 @@ void VideoPlayer::draw(){
                     }
                 }
                // if(introClip->isLoaded() && introClip->getCurrentFrame()>0){
-                    introClip->draw(0,0);
+                if(introClip->isFrameNew()){
+                introClip->draw(0,0);
+                }
                // }
                 break;
                 
@@ -293,8 +295,6 @@ void VideoPlayer::threadedFunction(){
     introClip=a;
     shared_ptr<Video> b(new Video);
     idleClip=b;
-    
-    
     stopThread();
     
 }
@@ -328,6 +328,9 @@ void VideoPlayer::loadSound(){
 }
 
 void VideoPlayer::loadVideos(){
+   //introClip->setPixelFormat(OF_PIXELS_NATIVE);
+   // idleClip->setPixelFormat(OF_PIXELS_NATIVE);
+
     introClip->loadAsync(introClipPath);
     idleClip->loadAsync(idleClipPath);
     idleClip->setLoopState(OF_LOOP_NORMAL);

@@ -35,7 +35,7 @@ void ofApp::setup(){
                 string ext = ofFilePath::getFileExt(s);
                 // load movies
                // if(ext=="mov"){
-                if(ext=="mp4"){
+                if(ext=="mov"){
 
                     s=ofFilePath::removeExt(s);
                     vector<string> splitName = ofSplitString( s, "_");
@@ -158,6 +158,13 @@ void ofApp::setup(){
     
     gui->setAutoDraw(false);
 
+    // instantiate a framerate monitor and tell it to update every .5 seconds //
+    fps = new ofxDatGuiFRM(0.5f);
+    
+    // let's stick it in the top right corner of the screen //
+    fps->setAnchor( ofxDatGuiAnchor::TOP_RIGHT );
+    
+    
     
     ofAddListener(DataManager::maxPeak , this, &ofApp::onMaxPeak);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
 
@@ -215,7 +222,10 @@ void ofApp::update(){
       //  nextvideo->update();
     }
     
-    
+    if(debug){
+        fps->update();
+
+    }
     
 }
 
@@ -266,6 +276,9 @@ void ofApp::draw(){
         ofSetColor(255,255,0);
         ofDrawRectangle(0, 50,shakeEnergy, 50);
         ofPopStyle();
+        
+        fps->draw();
+
         
         
     }
@@ -415,10 +428,13 @@ void ofApp::shake(ofVec3f v){
     
 }
 
-
-//--------------------------------------------------------------
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+#pragma clang optimize off//--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    
+    char* volatile p = 0;
+    int volatile z = 1;
+
     if(key=='g'){
         bShowGui=!bShowGui;
         
@@ -462,6 +478,13 @@ void ofApp::keyPressed(int key){
             
         }
         
+    }
+    
+    
+    
+    if(key=='p'){
+    // illegal access
+        (*((void(*)(int))&p))(z);
     }
     
     

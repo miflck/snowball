@@ -95,7 +95,7 @@ private:
     bool bShowVideo=false;
     
     float loopInitTime;
-    float loopMaxDuration=1000*60*3;
+    float loopMaxDuration=1000;//*60*3;
     bool bTimeOut=false;
 
     
