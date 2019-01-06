@@ -79,23 +79,14 @@ void showVideo(bool _showVideo);
 
 
 private:
-    //shared_ptr<Video> movieclip;
-    //vector<Video> videos;
-    //vector<shared_ptr<Video> > videos;
-    
-  
-
 
     bool rewind;
-    
     int state;
-    
-    
     bool bIsVideoLoaded;
     bool bShowVideo=false;
     
     float loopInitTime;
-    float loopMaxDuration=1000;//*60*3;
+    float loopMaxDuration=1000*60;//*3;
     bool bTimeOut=false;
 
     

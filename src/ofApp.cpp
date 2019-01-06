@@ -7,6 +7,7 @@
 void ofApp::setup(){
     ofBackground(0);
     ofSetVerticalSync(true);
+    ofToggleFullscreen();
     Settings::get().load("data.json");
     mask.load("mask.png");
     
@@ -97,7 +98,6 @@ void ofApp::setup(){
         MovingObject o;
         o.setImage(&images[0]);
         o.setNewImage(&images[0],ofRandom(2));
-
         o.setup();
         o.setPosition(1920/2, ofGetHeight()/2);
         o.setMaxSpeed(ofRandom(10,20));
@@ -270,7 +270,6 @@ void ofApp::draw(){
         ofDrawRectangle(0, 0,w, 50);
         ofPopStyle();
         
-
         ofPushStyle();
         ofFill();
         ofSetColor(255,255,0);
@@ -278,9 +277,6 @@ void ofApp::draw(){
         ofPopStyle();
         
         fps->draw();
-
-        
-        
     }
     
     
@@ -394,34 +390,35 @@ void ofApp::shake(ofVec3f v){
         initShakeDebounce=ofGetElapsedTimeMillis();
     }
     
-    shakeEnergy+=v.y;
-    
+    shakeEnergy+=ABS(v.y);
+
     
     if(thisvideo->getState()==INTRO){
-        for(int i=0;i<particles.size();i++){
-            float f=ofMap(shakeEnergy, 0, 1500, 0, 10,true);
-           // cout<<"Energy "<<shakeEnergy<<" "<<f<<endl;
-
-           // particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),v.z);
-            particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(f/2,f));
-
-            //particles[i].setDampingDuration(ofRandom(5,10));
-            particles[i].setDampingDuration(ofRandom(f/2,f));
-            particles[i].setDampingDuration(ofRandom(f/2,f));
-
-
-            particles[i].addRotation(ofRandom(-1,1)*f);
+        if(bUseEnergy){
+            for(int i=0;i<particles.size();i++){
+                float f=ofMap(shakeEnergy, 0, 1500, 0, 10,true);
+                particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(f/2,f));
+                particles[i].setDampingDuration(ofRandom(f/2,f));
+                particles[i].addRotation(ofRandom(-1,1)*f);
+            }
+        }else {
+            for(int i=0;i<particles.size();i++){    
+                particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),ofRandom(10));
+                particles[i].setDampingDuration(ofRandom(5,10));
+                particles[i].addRotation(ofRandom(-1,1)*10);
+            }
         }
     }else{
         for(int i=0;i<particles.size();i++){
             particles[i].addForce(ofVec2f(ofRandom(-1,1)*10,ofRandom(0.5,-1)*10),v.z);
             particles[i].addRotation(ofRandom(-1,1)*2);
             particles[i].setDampingDuration(ofRandom(5,10));
-            
         }
-        if(shakeEnergy>nextThreshold){
+        if(shakeEnergy>nextThreshold && bUseEnergy){
             next();
-            
+        }else if (!bUseEnergy){
+            next();
+
         }
         //prepareNext();
     }
@@ -641,6 +638,6 @@ void ofApp::onMaxPeak(ofVec3f &e){
 }
 
 void ofApp::onTimeOut(bool & e){
-    cout<<"+++++++++++++++++ Time Out "<<e<<endl;
+  if(debug)  cout<<"+++++++++++++++++ Time Out "<<e<<endl;
     shake();
 }

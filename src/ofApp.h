@@ -37,13 +37,11 @@ class ofApp : public ofBaseApp{
     shared_ptr<VideoPlayer> nextvideo;
 
     
-    vector <MovingObject> particles;
+    vector <MovingObject > particles;
     
     void next();
     void debugNext();
-    
     void shake();
-    
     void shake(ofVec3f v);
 
 
@@ -59,7 +57,6 @@ class ofApp : public ofBaseApp{
 
     ofxDatGuiSlider* minslider;
     ofxDatGuiSlider* maxslider;
-    
     
     ofxDatGuiValuePlotter* zPlotter; 
     
@@ -95,19 +92,16 @@ private:
     ofVec2f *boundingBoxDimension;
 
     
-    bool bUseSerial=true;
+    bool bUseSerial=false;
     ofxSimpleSerial    serial;
     void        onNewMessage(string & message);
     string        message;
     bool        requestRead;
     
     DataManager datamanager;
-    
-    float imageFadeDuration=10;
-    
+
     float nextDebounceTimer;
     float nextDebounceDuration=500;
-		
 
     
     void onMaxPeak(ofVec3f & e);
@@ -122,10 +116,13 @@ private:
     float shakeEnergy;
     float shakeDamping=0.99;
     
-    int nextThreshold=600;
-
+    
+    int nextThreshold=1000;
+    
+    bool bUseEnergy=true;
     ofxDatGuiFRM* fps;
 
+    float imageFadeDuration=10;
 
     
 };

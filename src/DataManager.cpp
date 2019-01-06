@@ -48,8 +48,8 @@ void DataManager::update(){
         
         
         if(f2>f1 && f2 > f3 && f2-f1>peakDiff){
-            cout<<"-----------max peak------------"<<endl;
-            cout<<f1<<" "<<f2<<" "<<f3<<endl;
+            //cout<<"-----------max peak------------"<<endl;
+           // cout<<f1<<" "<<f2<<" "<<f3<<endl;
             ofVec3f v =ofVec3f(f1,f2,f3);
             ofNotifyEvent(maxPeak,v );
         }

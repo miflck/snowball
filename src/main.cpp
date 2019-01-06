@@ -6,7 +6,7 @@
 //========================================================================
 int main( ){
       //  ofxWatchdog::watch(2000, true, true, true);
-  //  ofxWatchdog::boot(2000, true, true, true);
+    ofxWatchdog::boot(2000, true, true, true);
 
 	//ofSetupOpenGL(1920,1080,OF_WINDOW);			// <-------- setup the GL context
 //   ofSetupOpenGL(1920,1080,OF_WINDOW);            // <-------- setup the GL context
@@ -20,11 +20,13 @@ int main( ){
     
   ofGLFWWindowSettings settings;
    // settings.setGLVersion(3, 2);
-    settings.width = 1920;
+    settings.multiMonitorFullScreen = true;
+   // settings.windowMode = OF_FULLSCREEN;
+    settings.width = 1920*2;
     settings.height = 1080;
     ofCreateWindow(settings);
     
- //   ofxWatchdog::trap();
+    ofxWatchdog::trap();
 
     ofRunApp(new ofApp());
 

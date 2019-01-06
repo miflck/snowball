@@ -38,32 +38,10 @@ void VideoPlayer::setup(){
 
 void VideoPlayer::update(){
     
-   // cout<<"state "<<state<<endl;
+  
+   
     
-    //bool isLoaded=true;
-    
-   // if(introClip->isFrameNew()){
-      //  introClip->update();//}
-   // if(idleClip->isFrameNew()){
-      //  idleClip->update();//}
-    
-    
-    if(introClip->isLoaded()){
-      //  introClip->update();
-        
-    }
-    
-   /* if(idleClip->isLoaded()){
-        idleClip->update();
-        
-    }*/
-    
-    // if(introClip->getIsMovieDone() && introClip->isPlaying()){
     if(state == INTRO && introClip->getIsMovieDone()){
-        
-        // ofSendMessage("intro CLIP is done");
-        // introClip->setPosition(0);
-        //cout<<"intro is done"<<endl;
         setState(IDLE);
     }
     
@@ -77,8 +55,6 @@ void VideoPlayer::update(){
 
      if(introClip->isLoaded()){
          introClip->update();
-         
-         
          float videoLength = introClip->getDuration();
          float videoElapsedTime = introClip->getPosition()*introClip->getDuration();
          float videoTimeRemaining = videoLength - videoElapsedTime;
@@ -86,18 +62,14 @@ void VideoPlayer::update(){
          if(videoTimeRemaining < fadeTime){ //if it is time to fade
              introClip->setVolume(1 * videoTimeRemaining / fadeTime);
          }
-         
          if(getDuration()-(getDuration()*getPosition())<3 &! loopsound.isPlaying()){
              startLoopsound();
          }
-      //   cout<<getDuration()<<" "<<getPosition()<<" seconds "<<(getDuration()*getPosition())<<endl;
      }
      break;
      
      case IDLE:
-            
-           // cout<<"Time "<<loopInitTime+loopMaxDuration<<" "<<ofGetElapsedTimeMillis()<<endl;
-            if((loopInitTime+loopMaxDuration)<ofGetElapsedTimeMillis()){
+        if((loopInitTime+loopMaxDuration)<ofGetElapsedTimeMillis()){
                 bool t=true;
                 if(!bTimeOut)ofNotifyEvent(timeOut, t);
                 bTimeOut=true;
@@ -147,7 +119,7 @@ void VideoPlayer::update(){
 
 
 void VideoPlayer::startLoopsound(){
-    cout<<"++++++++++++++++++++++++++ start Loopsound++++++++++++++"<<endl;
+cout<<"++++++++++++++++++++++++++ start Loopsound++++++++++++++"<<endl;
     loopsound.setLoop(true);
     loopsound.play();
     
@@ -163,13 +135,12 @@ void VideoPlayer::draw(){
                         bool b =true;
                         ofNotifyEvent(readyToPlay,b);
                         notified=true;
-                        
                     }
                 }
                // if(introClip->isLoaded() && introClip->getCurrentFrame()>0){
-                if(introClip->isFrameNew()){
+               // if(introClip->isFrameNew()){ // blitzer
                 introClip->draw(0,0);
-                }
+               // }
                // }
                 break;
                 
@@ -187,21 +158,11 @@ void VideoPlayer::draw(){
 
 
 void VideoPlayer::setIntroClip(string p){
-    // introClip->setPixelFormat(OF_PIXELS_NATIVE);
-
-    //introClip->loadAsync(p);
-    //cout<<"loading intro"<<p<<endl;
     introClipPath=p;
-    //introClip->setLoopState(OF_LOOP_NONE);
 }
 
 void VideoPlayer::setIdleClip(string p){
-   // idleClip->setPixelFormat(OF_PIXELS_NATIVE);
-
-  //  idleClip->loadAsync(p);
     idleClipPath=p;
-   // cout<<"loading idle "<<p<<endl;
-
 }
 
 void VideoPlayer::setState(int _state){
