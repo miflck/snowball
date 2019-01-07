@@ -455,32 +455,17 @@ void ofApp::keyPressed(int key){
        
     }
     
-    if(key=='t'){
-        
-        for(int i=0;i<particles.size();i++){
-            particles[i].scaleTo(5);
-           
-        }
-        
-    }
-    
-    
-    
     if(key=='d'){
-        
         debug=!debug;
-        
     }
+    
     if(key=='m'){
         bShowMask=!bShowMask;
     }
     
-    
     if(key=='B'){
-        //  mover.setSlowDown(true);
         boundingBoxPosition->set(ofGetMouseX(),ofGetMouseY());
         Settings::get().save("data.json");
-        
         
         for(int i=0;i<particles.size();i++){
             particles[i].setBoundingBox(ofRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y));
