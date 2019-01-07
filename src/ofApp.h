@@ -55,11 +55,10 @@ class ofApp : public ofBaseApp{
     
     ofxDatGui* gui;
 
-    ofxDatGuiSlider* minslider;
-    ofxDatGuiSlider* maxslider;
-    
-    ofxDatGuiValuePlotter* zPlotter; 
-    
+
+    ofxDatGuiValuePlotter* zPlotter;     
+    ofxDatGuiSlider* yshift;
+
 
     //void onSliderEvent(ofxDatGuiSliderEvent e);
     

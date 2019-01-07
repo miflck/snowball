@@ -138,25 +138,22 @@ void ofApp::setup(){
     gui->addHeader("wave monitor & value plotter example");
     gui->addFooter();
 
-    minslider = new ofxDatGuiSlider("MIN", 0, 1000, 20);
-    minslider->setWidth(600, .2); // make label area 20% of width //
-    minslider->setPosition(0, 200);
-   // minslider->onSliderEvent(this, &ofApp::onSliderEvent);
- 
-    maxslider = new ofxDatGuiSlider("MAX", 0, 1000, 20);
-    maxslider->setWidth(600, .2); // make label area 20% of width //
-    maxslider->setPosition(0, 250);
-    //maxslider->onSliderEvent(this, &ofApp::onSliderEvent);
+   
     
     zPlotter = gui->addValuePlotter("zPlotter", 300, 500);
     gui->addBreak()->setHeight(20);
-    zoom=gui->addSlider("zoom", 0.5, 1);
+    zoom=gui->addSlider("zoom",0,1, Settings::getFloat("zoom"));
+    zoom->bind(Settings::getFloat("zoom"));
+
     
+    yshift = gui->addSlider("yshift", -300, 0,Settings::getFloat("yshift"));
+    yshift->bind(Settings::getFloat("yshift"));
+
     
     gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
 
     
-    gui->setAutoDraw(false);
+    gui->setAutoDraw(true);
 
     // instantiate a framerate monitor and tell it to update every .5 seconds //
     fps = new ofxDatGuiFRM(0.5f);
@@ -190,8 +187,6 @@ void ofApp::update(){
     
      ofSoundUpdate();
     
-    minslider->update();
-    maxslider->update();
 
     
     for(int i=0;i<videos.size();i++){
@@ -241,9 +236,10 @@ void ofApp::draw(){
         ofSetColor(255);
     }
     ofTranslate(1920/2, 1080);
-    ofScale(scale,scale);
+    ofScale(Settings::getFloat("zoom"),Settings::getFloat("zoom"));
     ofTranslate(-1920/2, -1080);
-    
+    ofTranslate(0, Settings::getFloat("yshift"));
+
     thisvideo->draw();
     lastvideo->draw();
 
@@ -283,8 +279,7 @@ void ofApp::draw(){
     
     
     if(bShowGui){
-        minslider->draw();
-        maxslider->draw();
+    
       //  gui->draw();
        // zPlotter->draw();
     }
@@ -434,12 +429,19 @@ void ofApp::keyPressed(int key){
 
     if(key=='g'){
         bShowGui=!bShowGui;
+        if(bShowGui){
+            gui->setAutoDraw(true);
+        }else{
+            gui->setAutoDraw(false);
+        }
+//        gui->toggle();
+
         
     }
     
     if(key =='n'){
-       // next();
-        prepareNext();
+        next();
+     //   prepareNext();
     }
     
     if(key =='N'){
@@ -493,6 +495,8 @@ void ofApp::keyPressed(int key){
             particles[i].setBoundingBox(ofRectangle(*boundingBoxPosition,boundingBoxDimension->x,boundingBoxDimension->y));
         }
     }
+    
+    
     
     
     if(key=='f'){
@@ -554,8 +558,9 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::onGuiSliderEvent(ofxDatGuiSliderEvent e)
 {
-    
-    
+    Settings::get().save("data.json");
+
+    /*
     if(e.target == minslider){
         ofSetBackgroundColor(ofColor::white*e.scale);
         cout << e.target->getLabel() << " value = "; e.target->printValue();
@@ -571,6 +576,7 @@ void ofApp::onGuiSliderEvent(ofxDatGuiSliderEvent e)
     /* else if (e.target == sliderFloat){
         cout << e.target->getLabel() << " value = "; e.target->printValue();
     }*/
+    
 }
 
 

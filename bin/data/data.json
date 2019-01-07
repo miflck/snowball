@@ -1,6 +1,8 @@
 {
    "Scale" : 1,
    "boundingBoxDimension" : [ 1674, 1045 ],
-   "boundingBoxPosition" : [ 121, 29 ]
+   "boundingBoxPosition" : [ 121, 29 ],
+   "yshift" : -67.86000061035156,
+   "zoom" : 1
 }
 
