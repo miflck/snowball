@@ -207,6 +207,7 @@ private:
     
     float maxLandingSpeed=3;
     
+    float scale;
     
 };
 

@@ -455,6 +455,16 @@ void ofApp::keyPressed(int key){
        
     }
     
+    if(key=='t'){
+        
+        for(int i=0;i<particles.size();i++){
+            particles[i].scaleTo(5);
+           
+        }
+        
+    }
+    
+    
     
     if(key=='d'){
         

@@ -24,7 +24,7 @@ void MovingObject::setup(){
     actualRadius=0;
     initRadius=0;
     easingInitTime = ofGetElapsedTimef();
-    radiusTarget=10;    
+    radiusTarget=5;    
      wanderR=30.f;
     wanderD=450.0f;
      change=0.5f;
@@ -36,6 +36,10 @@ void MovingObject::setup(){
     bHasReached=false;
     
     actualRotation=0;
+    
+    scale=1;//ofRandom(1);
+    
+    
 }
 
 void MovingObject::update(){
@@ -168,7 +172,7 @@ void MovingObject::draw(){
   
     ofTranslate(position.x,position.y);
     ofRotate(actualRotation);
-    
+    ofScale(scale,scale);
     
     ofSetColor(255,actualFade);
     fadeInImage->draw(-fadeInImage->getWidth()/2,-fadeInImage->getHeight()/2);
@@ -176,9 +180,9 @@ void MovingObject::draw(){
     ofSetColor(255,255-actualFade);
     fadeOutImage->draw(-fadeOutImage->getWidth()/2,-fadeOutImage->getHeight()/2);
     
+
    // ofSetColor(255,actualFade);
-   // ofDrawEllipse(position.x, position.y, actualRadius, actualRadius);
-    
+
     ofPopStyle();
     ofPopMatrix();
     
